@@ -1,68 +1,66 @@
-BioSystem - Sistema Biométrico de Gestión Estudiantil
-https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
-https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+# 🧬 BioSystem - Sistema Biométrico de Gestión Estudiantil
 
-BioSystem es una solución integral para instituciones educativas que combina gestión estudiantil con autenticación biométrica mediante huellas digitales.
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-Características Principales
-🔐 Autenticación dual: Credenciales tradicionales o huellas digitales
+**BioSystem** es una solución integral para instituciones educativas que fusiona gestión académica y autenticación biométrica mediante huellas digitales.
 
-👨‍🎓 Gestión completa de estudiantes: Registro, actualización y eliminación
+---
 
-📊 Sistema biométrico: Registro y verificación de huellas digitales
+## ✨ Características Principales
 
-📈 Reportes detallados: Seguimiento de asistencia y actividades
+- 🔐 **Autenticación dual**: credenciales tradicionales y huellas digitales  
+- 👨‍🎓 **Gestión estudiantil completa**: registrar, actualizar, eliminar  
+- 📊 **Sistema biométrico**: registro y verificación de huellas  
+- 📈 **Reportes**: asistencia, actividad y control académico  
+- 👥 **Gestión de roles**: administración con permisos diferenciados  
+- 💰 **Control de deudas**: seguimiento de obligaciones económicas  
 
-👥 Gestión de roles: Administradores y personal con permisos diferenciados
+---
 
-💰 Control de deudas: Seguimiento de obligaciones estudiantiles
+## ⚙️ Tecnologías Utilizadas
 
-Tecnologías Utilizadas
-Backend
-Laravel 10+ - Framework PHP principal
+### 🧠 Backend
+- **Laravel 10+** – Framework principal  
+- **Eloquent ORM** – Mapeo de datos  
+- **Python 3.8+** – Integración con sensores biométricos  
+- **MySQL** – Base de datos relacional  
 
-Eloquent ORM - Gestión de base de datos
+### 🎨 Frontend
+- **Tailwind CSS** – Estilos minimalistas  
+- **Vite** – Empaquetador moderno  
+- **Alpine.js** – Interactividad ligera  
+- **Font Awesome** – Iconografía visual  
 
-Python 3.8+ - Integración con dispositivos biométricos
+### 🧩 Hardware
+- **Dispositivos compatibles** con `FTRAPI`  
+- DLLs utilizadas: `FTRAPI.dll`, `ftrScanAPI.dll`  
 
-MySQL - Base de datos relacional
+---
 
-Frontend
-Tailwind CSS - Estilización de componentes
+## 🗂️ Estructura del Proyecto
 
-Vite - Bundler y build tool
-
-Font Awesome - Iconografía
-
-Alpine.js - Interactividad en vistas
-
-Hardware
-Dispositivos biométricos compatibles con FTRAPI
-
-DLLs de integración: FTRAPI.dll, ftrScanAPI.dll
-
-Estructura del Proyecto
-bash
+```bash
 .
 ├── app
 │   ├── Http
-│   │   ├── Controllers  # Lógica de controladores
-│   │   └── Middleware   # Control de acceso
-│   ├── Models           # Modelos de datos
-│   └── Providers        # Service Providers
+│   │   ├── Controllers     # Lógica del sistema
+│   │   └── Middleware      # Control de accesos
+│   ├── Models              # Modelos Eloquent
+│   └── Providers           # Service Providers
 ├── resources
-│   ├── python           # Scripts de integración biométrica
-│   └── views            # Vistas Blade
+│   ├── python              # Scripts biométricos
+│   └── views               # Vistas Blade
 ├── public
-│   └── build            # Assets compilados
+│   └── build               # Assets compilados
 ├── routes
-│   └── web.php          # Definición de rutas
+│   └── web.php             # Rutas web
 └── database
-    ├── migrations       # Esquema de base de datos
-    └── seeders          # Datos iniciales
-Instalación
-Requisitos previos
+    ├── migrations          # Estructura de tablas
+    └── seeders             # Datos semilla
+🚀 Instalación
+🔧 Requisitos Previos
 PHP 8.1+
 
 Composer
@@ -73,87 +71,79 @@ Python 3.8+
 
 MySQL 5.7+
 
-Pasos de instalación
-Clonar el repositorio:
-
+📦 Pasos de instalación
 bash
+Copiar
+Editar
+# Clona el repositorio
 git clone https://github.com/tu-usuario/biosystem.git
 cd biosystem
-Instalar dependencias PHP:
 
-bash
+# Instala dependencias PHP
 composer install
-Instalar dependencias JavaScript:
 
-bash
+# Instala dependencias JavaScript
 npm install
-Configurar entorno (copiar y editar .env):
 
-bash
+# Configura el entorno
 cp .env.example .env
 php artisan key:generate
-Configurar variables de entorno para biométrica en .env:
 
-env
+# Configura rutas biométricas en .env
+# .env
 BIOMETRIC_DEVICE_PATH=C:\ruta\al\dispositivo
 BIOMETRIC_SCRIPT_PATH=resources/python/
-Ejecutar migraciones:
 
-bash
+# Ejecuta migraciones
 php artisan migrate --seed
-Compilar assets:
 
-bash
+# Compila assets
 npm run build
-Iniciar servidor:
 
-bash
+# Inicia el servidor
 php artisan serve
-Uso de la Biometría
-Flujo de registro de huella
-Diagram
-Code
+👆 Uso de la Biometría
+🔄 Flujo de Registro de Huella
+mermaid
+Copiar
+Editar
 sequenceDiagram
+    participant Usuario
+    participant Sistema
+    participant Dispositivo
+    participant Python
+    participant BaseDeDatos
+
     Usuario->>+Sistema: Selecciona "Registrar huella"
-    Sistema->>+Dispositivo: Solicita captura de huella
+    Sistema->>+Dispositivo: Solicita captura
     Dispositivo-->>-Sistema: Envía datos biométricos
-    Sistema->>+Python: Ejecuta script de registro
-    Python-->>-Sistema: Confirma registro exitoso
-    Sistema->>+Base de Datos: Almacena huella asociada
-    Base de Datos-->>-Sistema: Confirma almacenamiento
-    Sistema-->>-Usuario: Muestra confirmación
-Scripts Python disponibles
+    Sistema->>+Python: Ejecuta script
+    Python-->>-Sistema: Confirma registro
+    Sistema->>+BaseDeDatos: Guarda la plantilla
+    BaseDeDatos-->>-Sistema: Confirmación
+    Sistema-->>-Usuario: Registro exitoso
+🐍 Scripts Python Disponibles
 Script	Función
 agregarHuellaExistente.py	Asocia huella a estudiante existente
 login.py	Autenticación biométrica
-probarDispositivo.py	Verifica estado del dispositivo
-agregarEstudiante.py	Crea nuevo estudiante con huella
-Capturas de Pantalla
-https://screenshots/admin-dashboard.png
-Panel de Administración - Vista general
+probarDispositivo.py	Verifica estado del lector
+agregarEstudiante.py	Registro de estudiante con huella
 
-https://screenshots/biometric-registration.png
-Interfaz de registro biométrico
+📸 Capturas de Pantalla
+Haz clic para ampliar si estás en GitHub
 
-https://screenshots/student-management.png
-Panel de gestión estudiantil
 
-Contribución
-Las contribuciones son bienvenidas. Sigue estos pasos:
+Panel de administración
 
-Haz un fork del proyecto
 
-Crea tu rama (git checkout -b feature/nueva-funcionalidad)
+Registro de huellas
 
-Realiza tus cambios
 
-Haz commit de los cambios (git commit -m 'Añade nueva funcionalidad')
+Panel de control académico
 
-Haz push a la rama (git push origin feature/nueva-funcionalidad)
 
-Abre un Pull Request
-
-Licencia
+📄 Licencia
 Este proyecto está bajo la licencia MIT.
 
-BioSystem - Gestión Estudiantil con Biometría · Desarrollado con ❤️ para instituciones educativas
+BioSystem — Gestión Estudiantil con Biometría
+Desarrollado con ❤️ para transformar la educación con seguridad e innovación.
