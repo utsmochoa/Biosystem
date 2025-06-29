@@ -62,38 +62,45 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user = Auth::user();
+        $inactive = $request->input('inactive', false); // Valor por defecto false
 
         if ($user) {
             Log::info('Logout de usuario', ['user_id' => $user->id]);
 
-            // Verificar si el usuario tiene un rol definido
+            $descripcion = '';
             if (isset($user->rol) && $user->rol === 'admin') {
-                reportesUsuarios::create([
-                    'users_id' => $user->id,
-                    'tipo_accion' => 'cierre_sesion',
-                    'descripcion' => "Cierre de sesión de administrador {$user->name}.",
-                    'fecha_hora' => Carbon::now('America/Caracas'),
-                ]);
-            } elseif (isset($user->rol)) {
-                reportesUsuarios::create([
-                    'users_id' => $user->id,
-                    'tipo_accion' => 'cierre_sesion',
-                    'descripcion' => "Cierre de sesion de personal con huella de seguridad {$user->name}.",
-                    'fecha_hora' => Carbon::now('America/Caracas'),
-                ]);
+                $descripcion = $inactive
+                    ? "Cierre automático de sesión por inactividad de administrador {$user->name}."
+                    : "Cierre de sesión de administrador {$user->name}.";
+            } elseif (isset($user->rol) && $user->rol === 'operador') {
+                $descripcion = $inactive
+                    ? "Cierre automático de sesión por inactividad de personal de seguridad {$user->name}."
+                    : "Cierre de sesion de personal de seguridad {$user->name}.";
             } else {
                 Log::warning('Usuario autenticado sin rol definido.', ['user_id' => $user->id]);
+                $descripcion = $inactive
+                    ? "Cierre automático de sesión por inactividad de usuario {$user->name}."
+                    : "Cierre de sesión de usuario {$user->name}.";
             }
+
+            reportesUsuarios::create([
+                'users_id' => $user->id,
+                'tipo_accion' => 'cierre_sesion',
+                'descripcion' => $descripcion,
+                'fecha_hora' => Carbon::now('America/Caracas'),
+            ]);
         } else {
             Log::warning('Intento de logout sin usuario autenticado.');
         }
 
-        // Cerrar sesión y regenerar la sesión
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('status', 'Has cerrado sesión correctamente.');
+        $mensaje = $inactive
+            ? 'Tu sesión ha sido cerrada automáticamente por inactividad.'
+            : 'Has cerrado sesión correctamente.';
 
+        return redirect()->route('login')->with('logout_reason', $mensaje);
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Administrador</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
 </head>
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
     <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
@@ -26,22 +27,30 @@
             </div>
         @endif
 
-        <form action="{{ route('Agregar.admin.pedir-huella') }}" method="post">
+        <form action="{{ route('Agregar.admin.pedir-huella') }}" method="post" id="adminForm">
             @csrf
             <div class="mb-4">
                 <label for="name" class="block text-sm font-semibold text-gray-700">Nombre de usuario:</label>
-                <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                <input type="text" id="name" name="name" maxlength="15" 
+                    class="mt-1 block w-full rounded-md border-2 border-blue-300 bg-blue-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2" 
+                    required>
+                <p class="text-xs text-gray-500 mt-1">Máximo 15 caracteres</p>
             </div>
 
-           <div class="mb-4">
+            <div class="mb-4">
                 <label for="password" class="block text-sm font-semibold text-gray-700">Contraseña:</label>
-                <input type="password" id="password" name="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-            </div> 
+                <input type="password" id="password" name="password" 
+                    class="mt-1 block w-full rounded-md border-2 border-blue-300 bg-blue-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2" 
+                    required>
+            </div>
 
-            {{-- <div class="mb-4">
-                <label for="confirmar" class="block text-sm font-semibold text-gray-700">Confirmar contraseña:</label>
-                <input type="text" id="confirmar" name="confirmar" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-            </div> --}}
+            <div class="mb-6">
+                <label for="confirm_password" class="block text-sm font-semibold text-gray-700">Confirmar contraseña:</label>
+                <input type="password" id="confirm_password" name="confirm_password" 
+                    class="mt-1 block w-full rounded-md border-2 border-blue-300 bg-blue-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2" 
+                    required>
+                <div id="passwordError" class="text-red-500 text-xs mt-1 hidden">Las contraseñas no coinciden</div>
+            </div>
 
             <div class="flex justify-between items-center mt-6">
                 <button type="button" onclick="window.location.href='{{ route('Crear.roles') }}'" 
@@ -53,7 +62,7 @@
                   <button type="reset" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition transform hover:scale-105 duration-300">
                     Vaciar
                   </button>
-                  <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition transform hover:scale-105 duration-300">
+                  <button type="submit" id="submitBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition transform hover:scale-105 duration-300">
                     Siguiente
                   </button>
                 </div>
@@ -65,8 +74,6 @@
         <input type="hidden" name="inactive" id="inactive" value="0">
     </form>
     
-    
-    
     <div id="inactivity-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
             <h2 class="text-xl font-bold text-gray-800 mb-2">⚠ Inactividad detectada</h2>
@@ -76,60 +83,108 @@
             </button>
         </div>
     </div>
-</body>
 
+    <script>
+        let timeoutDuration = 2 * 60 * 1000; // 2 min
+        let warningDuration = 1 * 60 * 1000; // 1 min
 
+        let warningTimer, logoutTimer;
 
+        function startTimers() {
+            warningTimer = setTimeout(() => {
+                document.getElementById('inactivity-modal').classList.remove('hidden');
+            }, warningDuration);
 
-<script>
-    let timeoutDuration = 2 * 60 * 1000; // 2 min
-    let warningDuration = 1 * 60 * 1000; // 1 min
+            logoutTimer = setTimeout(() => {
+                document.getElementById('inactive').value = '1';
+                document.getElementById('logout-form').submit();
+            }, timeoutDuration);
+        }
 
-    let warningTimer, logoutTimer;
+        function resetTimers() {
+            clearTimeout(warningTimer);
+            clearTimeout(logoutTimer);
+            startTimers();
+        }
 
-    function startTimers() {
-        warningTimer = setTimeout(() => {
-            document.getElementById('inactivity-modal').classList.remove('hidden');
-        }, warningDuration);
+        function closeModal() {
+            document.getElementById('inactivity-modal').classList.add('hidden');
+        }
 
-        logoutTimer = setTimeout(() => {
-            document.getElementById('inactive').value = '1';
-            document.getElementById('logout-form').submit(); // se hace POST correctamente
-        }, timeoutDuration);
+        // Inicia los temporizadores al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            startTimers();
+            
+            // Validación de contraseñas
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const passwordError = document.getElementById('passwordError');
+            const submitBtn = document.getElementById('submitBtn');
+            const form = document.getElementById('adminForm');
 
+            function validatePasswords() {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    passwordError.classList.remove('hidden');
+                    confirmPasswordInput.classList.add('border-red-500');
+                    confirmPasswordInput.classList.remove('border-blue-300');
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    return false;
+                } else {
+                    passwordError.classList.add('hidden');
+                    confirmPasswordInput.classList.remove('border-red-500');
+                    confirmPasswordInput.classList.add('border-blue-300');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    return true;
+                }
+            }
 
-    }
+            confirmPasswordInput.addEventListener('input', validatePasswords);
+            passwordInput.addEventListener('input', validatePasswords);
 
-    function resetTimers() {
-        clearTimeout(warningTimer);
-        clearTimeout(logoutTimer);
-        startTimers();
-    }
+            // Validación del formulario antes de enviar
+            form.addEventListener('submit', function(e) {
+                if (!validatePasswords()) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Validación adicional del nombre de usuario
+                const username = document.getElementById('name').value;
+                if (username.length > 15) {
+                    e.preventDefault();
+                    alert('El nombre de usuario no puede exceder los 15 caracteres');
+                    return false;
+                }
+                
+                return true;
+            });
 
-    function closeModal() {
-        document.getElementById('inactivity-modal').classList.add('hidden');
-    }
-
-    // Inicia los temporizadores al cargar la página
-    window.addEventListener('DOMContentLoaded', () => {
-        startTimers();
-    });
-
-    // Resetea los temporizadores con actividad del usuario
-    ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
-        window.addEventListener(evt, () => {
-            resetTimers();
-            closeModal(); // Solo se cierra si el usuario se mueve
+            // Validación en tiempo real del nombre de usuario
+            document.getElementById('name').addEventListener('input', function(e) {
+                if (e.target.value.length > 15) {
+                    e.target.value = e.target.value.substring(0, 15);
+                }
+            });
         });
-    });
 
-  // Oculta el mensaje de error tras 5 segundos
-  setTimeout(() => {
-      const alert = document.querySelector('.bg-red-50.border-red-200');
-      if (alert) {
-          alert.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
-          setTimeout(() => alert.remove(), 1000); // Remover del DOM tras animarse
-      }
-  }, 5000);
-</script>
+        // Resetea los temporizadores con actividad del usuario
+        ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                resetTimers();
+                closeModal();
+            });
+        });
+
+        // Oculta el mensaje de error tras 5 segundos
+        setTimeout(() => {
+            const alert = document.querySelector('.bg-red-50.border-red-200');
+            if (alert) {
+                alert.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+                setTimeout(() => alert.remove(), 1000);
+            }
+        }, 5000);
+    </script>
+</body>
 </html>

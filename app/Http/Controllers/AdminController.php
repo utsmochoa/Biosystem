@@ -157,7 +157,7 @@ class AdminController extends Controller
                 'estudiante_id' => $estudiante->id,
                 'tipo_accion' => 'registro',
                 'descripcion' => 'Registro de nuevo estudiante exitoso.',
-                'fecha_hora' => now(),
+                'fecha_hora' => Carbon::now('America/Caracas'),
             ]);
 
             DB::commit();
@@ -293,11 +293,61 @@ class AdminController extends Controller
             ->with('error', 'Error en el script de captura. Código: ' . $return_var . '. Salida: ' . $errorOutput);
     }
 
+    // Función principal para mostrar la vista
     public function eliminarEstudiante(){
-        $estudiantes = estudiantes::where('activo', true)->get();
-        return view('Admin.Gestion-estudiante.Borrar-estudiante.index', compact('estudiantes'));
+        $estudiantesHabilitados = estudiantes::where('activo', true)->get();
+        $estudiantesDeshabilitados = estudiantes::where('activo', false)->get();
+        
+        return view('Admin.Gestion-estudiante.Borrar-estudiante.index', compact('estudiantesHabilitados', 'estudiantesDeshabilitados'));
     }
 
+    // Función para deshabilitar estudiante
+    public function deshabilitarEstudiante(Request $request, $id)
+    {
+        $request->validate([
+            'razon' => 'required|string|max:255'
+        ]);
+
+        $estudiante = estudiantes::findOrFail($id);
+        $estudiante->activo = false;
+        $estudiante->save();
+
+        // Crear registro en el historial
+        reportesEstudiantes::create([
+            'estudiante_id' => $id,
+            'tipo_accion' => 'deshabilitacion',
+            'descripcion' => 'Estudiante deshabilitado. Razón: ' . $request->razon,
+            'fecha_hora' => Carbon::now('America/Caracas'),
+        ]);
+
+        return redirect()->route('Gestion.eliminar')
+            ->with('success', 'Estudiante deshabilitado correctamente');
+    }
+
+    // Función para habilitar estudiante
+    public function habilitarEstudiante(Request $request, $id)
+    {
+        $request->validate([
+            'razon' => 'required|string|max:255'
+        ]);
+
+        $estudiante = estudiantes::findOrFail($id);
+        $estudiante->activo = true;
+        $estudiante->save();
+
+        // Crear registro en el historial
+        reportesEstudiantes::create([
+            'estudiante_id' => $id,
+            'tipo_accion' => 'habilitacion',
+            'descripcion' => 'Estudiante habilitado. Razón: ' . $request->razon,
+            'fecha_hora' => Carbon::now('America/Caracas'),
+        ]);
+
+        return redirect()->route('Gestion.eliminar')
+            ->with('success', 'Estudiante habilitado correctamente');
+    }
+
+    // Función destroy original (puedes mantenerla o eliminarla)
     public function destroy($id)
     {
         $estudiante = estudiantes::findOrFail($id);

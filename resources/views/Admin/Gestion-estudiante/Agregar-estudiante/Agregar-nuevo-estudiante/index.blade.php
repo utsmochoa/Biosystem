@@ -46,15 +46,15 @@
             </div>
             <div class="mb-4">
                 <label for="nombres" class="block text-sm font-semibold text-gray-700">Nombres:</label>
-                <input type="text" id="nombres" name="nombres" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                <input type="text" id="nombres" name="nombres" maxlength="32" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
             </div>
             <div class="mb-4">
                 <label for="apellidos" class="block text-sm font-semibold text-gray-700">Apellidos:</label>
-                <input type="text" id="apellidos" name="apellidos" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                <input type="text" id="apellidos" name="apellidos" maxlength="32" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
             </div>
             <div class="mb-4">
                 <label for="cedula" class="block text-sm font-semibold text-gray-700">Cédula de identidad:</label>
-                <input type="text" id="cedula" name="cedula_identidad" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                <input type="text" id="cedula" name="cedula_identidad" maxlength="8" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
             </div>
             <div class="mb-4">
                 <label for="carrera" class="block text-sm font-semibold text-gray-700">Carrera:</label>

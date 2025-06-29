@@ -44,9 +44,6 @@
             </div>
         </div>
 
-
-
-
         <!-- Filtros y Búsqueda -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -54,34 +51,136 @@
                 Filtros de Búsqueda
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <!-- Búsqueda General -->
-                <div class="relative">
-                    <input type="text" 
-                           id="searchInput" 
-                           placeholder="Buscar en todos los campos..." 
-                           class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            <!-- Filtros para Estudiantes -->
+            <div id="filtrosEstudiantes" class="space-y-4">
+                <!-- Primera fila de filtros -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Búsqueda por Nombre -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="filtroNombreEst" 
+                               placeholder="Buscar por nombre..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Búsqueda por Apellido -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="filtroApellidoEst" 
+                               placeholder="Buscar por apellido..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-user-tag absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Búsqueda por Cédula -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="filtroCedula" 
+                               placeholder="Buscar por cédula..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-id-card absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Búsqueda por Carrera -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="filtroCarrera" 
+                               placeholder="Buscar por carrera..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-graduation-cap absolute left-3 top-3 text-gray-400"></i>
+                    </div>
                 </div>
                 
-                <!-- Filtro por Tipo de Acción -->
-                <select id="filtroAccion" class="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
-                    <option value="">Todos los tipos de acción</option>
-                    <option value="registro">Registro</option>
-                    <option value="actualizacion">Actualización</option>
-                    <option value="inicio_sesion">Inicio de Sesión</option>
-                    <option value="cierre_sesion">Cierre de Sesión</option>
-                    <option value="verificacion">Verificación</option>
-                </select>
+                <!-- Segunda fila de filtros -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Filtro por Semestre -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="filtroSemestre" 
+                               placeholder="Buscar por semestre..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-layer-group absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Filtro por Fecha -->
+                    <input type="date" 
+                           id="filtroFechaEst" 
+                           class="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                    
+                    <!-- Búsqueda General -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="busquedaGeneralEst" 
+                               placeholder="Búsqueda general..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filtros para Usuarios -->
+            <div id="filtrosUsuarios" class="space-y-4 hidden">
+                <!-- Primera fila de filtros -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Búsqueda por Nombre de Usuario -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="filtroNombreUsuario" 
+                               placeholder="Buscar por nombre..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Filtro por Rol -->
+                    <select id="filtroRolUsuarios" class="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                        <option value="">Todos los roles</option>
+                        <option value="admin">Administrador</option>
+                        <option value="operador">Operador</option>
+                    </select>
+                    
+                    <!-- Filtro por Tipo de Acción -->
+                    <select id="filtroAccionUsuarios" class="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                        <option value="">Todos los tipos de acción</option>
+                        <option value="registro">Registro</option>
+                        <option value="actualizacion">Actualización</option>
+                        <option value="inicio_sesion">Inicio de Sesión</option>
+                        <option value="cierre_sesion">Cierre de Sesión</option>
+                        <option value="verificacion">Verificación</option>
+                        <option value="eliminacion">Eliminación</option>
+                        <option value="creacion">Creación</option>
+                    </select>
+                    
+                    <!-- Filtro por Fecha -->
+                    <input type="date" 
+                           id="filtroFechaUsuarios" 
+                           class="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                </div>
                 
-                <!-- Filtro por Fecha -->
-                <input type="date" 
-                       id="filtroFecha" 
-                       class="w-full border-2 border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                <!-- Segunda fila de filtros -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Búsqueda General -->
+                    <div class="relative">
+                        <input type="text" 
+                               id="busquedaGeneralUsuarios" 
+                               placeholder="Búsqueda general..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- Filtro por ID de Usuario -->
+                    <div class="relative">
+                        <input type="number" 
+                               id="filtroIdUsuario" 
+                               placeholder="Buscar por ID de usuario..." 
+                               class="w-full border-2 border-gray-300 rounded-lg pl-10 py-2 focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-hashtag absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
             </div>
             
             <!-- Botón Limpiar Filtros -->
-            <div class="flex justify-end">
+            <div class="flex justify-end mt-4">
                 <button onclick="limpiarFiltros()" 
                         class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center">
                     <i class="fas fa-eraser mr-2"></i>
@@ -160,7 +259,10 @@
                 <i class="fas fa-inbox text-4xl mb-4 text-gray-300"></i>
                 <p class="text-lg">No se encontraron registros</p>
             </div>
+            <div id="paginacionContainer" class="w-full flex justify-center mt-1"></div>
+
         </div>
+
     </div>
 
     <!-- Loading Overlay -->
@@ -176,8 +278,6 @@
         <input type="hidden" name="inactive" id="inactive" value="0">
     </form>
     
-    
-    
     <div id="inactivity-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
             <h2 class="text-xl font-bold text-gray-800 mb-2">⚠ Inactividad detectada</h2>
@@ -187,8 +287,6 @@
             </button>
         </div>
     </div>
-    
-    
     
     <script>
         let timeoutDuration = 2 * 60 * 1000; // 2 min
@@ -203,10 +301,8 @@
     
             logoutTimer = setTimeout(() => {
                 document.getElementById('inactive').value = '1';
-                document.getElementById('logout-form').submit(); // se hace POST correctamente
+                document.getElementById('logout-form').submit();
             }, timeoutDuration);
-    
-    
         }
     
         function resetTimers() {
@@ -228,279 +324,422 @@
         ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
             window.addEventListener(evt, () => {
                 resetTimers();
-                closeModal(); // Solo se cierra si el usuario se mueve
+                closeModal();
             });
         });
-    
 
-    // Variables globales
-    let datosOriginales = [];
-    let datosFiltrados = [];
-    let tipoReporteActual = 'estudiantes';
+        // Variables globales
+        let datosOriginales = [];
+        let datosFiltrados = [];
+        let tipoReporteActual = 'estudiantes';
 
-    let paginaActual = 1;
-    const registrosPorPagina = 10;
+        let paginaActual = 1;
+        const registrosPorPagina = 10;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        cargarDatos();
-        document.getElementById('searchInput').addEventListener('input', aplicarFiltros);
-        document.getElementById('filtroAccion').addEventListener('change', aplicarFiltros);
-        document.getElementById('filtroFecha').addEventListener('change', aplicarFiltros);
-    });
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarDatos();
+            
+            // Event listeners para filtros de estudiantes
+            document.getElementById('filtroNombreEst').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroApellidoEst').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroCedula').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroCarrera').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroSemestre').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroFechaEst').addEventListener('change', aplicarFiltros);
+            document.getElementById('busquedaGeneralEst').addEventListener('input', aplicarFiltros);
+            
+            // Event listeners para filtros de usuarios
+            document.getElementById('filtroNombreUsuario').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroRolUsuarios').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroAccionUsuarios').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroFechaUsuarios').addEventListener('change', aplicarFiltros);
+            document.getElementById('busquedaGeneralUsuarios').addEventListener('input', aplicarFiltros);
+            document.getElementById('filtroIdUsuario').addEventListener('input', aplicarFiltros);
+        });
 
-    function cambiarTipoReporte(tipo) {
-        tipoReporteActual = tipo;
-        paginaActual = 1;
+        function cambiarTipoReporte(tipo) {
+            tipoReporteActual = tipo;
+            paginaActual = 1;
 
-        document.getElementById('btnEstudiantes').className = tipo === 'estudiantes'
-            ? 'px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center active-tab'
-            : 'px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center';
+            // Cambiar estilos de botones
+            document.getElementById('btnEstudiantes').className = tipo === 'estudiantes'
+                ? 'px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center active-tab'
+                : 'px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center';
 
-        document.getElementById('btnUsuarios').className = tipo === 'usuarios'
-            ? 'px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center active-tab'
-            : 'px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center';
+            document.getElementById('btnUsuarios').className = tipo === 'usuarios'
+                ? 'px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center active-tab'
+                : 'px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center';
 
-        document.getElementById('tituloTabla').textContent = tipo === 'estudiantes'
-            ? 'Historial de Accesos de Estudiantes'
-            : 'Historial de Usuarios';
+            // Cambiar título
+            document.getElementById('tituloTabla').textContent = tipo === 'estudiantes'
+                ? 'Historial de Accesos de Estudiantes'
+                : 'Historial de Usuarios';
 
-        cargarDatos();
-    }
-
-    function cargarDatos() {
-        mostrarLoading(true);
-        const endpoint = tipoReporteActual === 'estudiantes'
-            ? '{{ route("reportes.estudiantes") }}'
-            : '{{ route("reportes.usuarios") }}';
-
-        fetch(endpoint, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                datosOriginales = data.data;
-                datosFiltrados = [...datosOriginales];
-                paginaActual = 1;
-                generarTabla();
-                actualizarEstadisticas();
+            // Mostrar/ocultar filtros apropiados
+            if (tipo === 'estudiantes') {
+                document.getElementById('filtrosEstudiantes').classList.remove('hidden');
+                document.getElementById('filtrosUsuarios').classList.add('hidden');
             } else {
-                console.error('Error al cargar datos:', data.message);
-                mostrarSinDatos();
+                document.getElementById('filtrosEstudiantes').classList.add('hidden');
+                document.getElementById('filtrosUsuarios').classList.remove('hidden');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            mostrarSinDatos();
-        })
-        .finally(() => {
-            mostrarLoading(false);
-        });
-    }
 
-    function generarTabla() {
-        const header = document.getElementById('tablaHeader');
-        const body = document.getElementById('tablaBody');
-        const sinDatos = document.getElementById('sinDatos');
-
-        header.innerHTML = '';
-        body.innerHTML = '';
-
-        if (datosFiltrados.length === 0) {
-            sinDatos.classList.remove('hidden');
-            return;
+            // Limpiar filtros antes de cambiar
+            limpiarFiltros();
+            cargarDatos();
         }
 
-        sinDatos.classList.add('hidden');
-        const columnas = Object.keys(datosFiltrados[0]);
+        function cargarDatos() {
+            mostrarLoading(true);
+            const endpoint = tipoReporteActual === 'estudiantes'
+                ? '{{ route("reportes.estudiantes") }}'
+                : '{{ route("reportes.usuarios") }}';
 
-        columnas.forEach(columna => {
-            const th = document.createElement('th');
-            th.className = 'px-6 py-3 text-left text-xs font-medium uppercase tracking-wider';
-            th.textContent = formatearNombreColumna(columna);
-            header.appendChild(th);
-        });
-
-        const inicio = (paginaActual - 1) * registrosPorPagina;
-        const fin = inicio + registrosPorPagina;
-        const datosPagina = datosFiltrados.slice(inicio, fin);
-
-        datosPagina.forEach((fila, index) => {
-            const tr = document.createElement('tr');
-            tr.className = index % 2 === 0
-                ? 'bg-white hover:bg-blue-50 transition-colors duration-150'
-                : 'bg-blue-50 hover:bg-blue-100 transition-colors duration-150';
-
-            columnas.forEach(columna => {
-                const td = document.createElement('td');
-                td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-900';
-
-                let valor = fila[columna];
-                if (columna === 'fecha_hora' && valor) {
-                    valor = new Date(valor).toLocaleString('es-ES');
+            fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
-
-                if (columna === 'tipo_accion') {
-                    td.innerHTML = crearBadgeTipoAccion(valor);
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    datosOriginales = data.data;
+                    datosFiltrados = [...datosOriginales];
+                    paginaActual = 1;
+                    generarTabla();
+                    actualizarEstadisticas();
                 } else {
-                    td.textContent = valor || 'N/A';
+                    console.error('Error al cargar datos:', data.message);
+                    mostrarSinDatos();
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarSinDatos();
+            })
+            .finally(() => {
+                mostrarLoading(false);
+            });
+        }
 
-                tr.appendChild(td);
+        function generarTabla() {
+            const header = document.getElementById('tablaHeader');
+            const body = document.getElementById('tablaBody');
+            const sinDatos = document.getElementById('sinDatos');
+
+            header.innerHTML = '';
+            body.innerHTML = '';
+
+            if (datosFiltrados.length === 0) {
+                sinDatos.classList.remove('hidden');
+                return;
+            }
+
+            sinDatos.classList.add('hidden');
+
+            // Definir columnas según el tipo de reporte
+            let columnasFinales;
+            if (tipoReporteActual === 'estudiantes') {
+                columnasFinales = ['id', 'nombre_completo', 'cedula', 'carrera', 'semestre', 'tipo_accion', 'descripcion', 'fecha_hora'];
+            } else {
+                columnasFinales = ['id', 'nombre_usuario', 'rol', 'tipo_accion', 'descripcion', 'fecha_hora'];
+            }
+
+            // Generar headers
+            columnasFinales.forEach(columna => {
+                const th = document.createElement('th');
+                th.className = 'px-6 py-3 text-left text-xs font-medium uppercase tracking-wider';
+                th.textContent = formatearNombreColumna(columna);
+                header.appendChild(th);
             });
 
-            body.appendChild(tr);
-        });
+            const inicio = (paginaActual - 1) * registrosPorPagina;
+            const fin = inicio + registrosPorPagina;
+            const datosPagina = datosFiltrados.slice(inicio, fin);
 
-        generarControlesPaginacion();
-    }
+            datosPagina.forEach((fila, index) => {
+                const tr = document.createElement('tr');
+                tr.className = index % 2 === 0
+                    ? 'bg-white hover:bg-blue-50 transition-colors duration-150'
+                    : 'bg-blue-50 hover:bg-blue-100 transition-colors duration-150';
 
-    function generarControlesPaginacion() {
-        const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-        const contenedor = document.getElementById('tablaBody').parentElement;
+                columnasFinales.forEach(columna => {
+                    const td = document.createElement('td');
+                    td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-900';
 
-        const paginacionExistente = document.getElementById('paginacion');
-        if (paginacionExistente) paginacionExistente.remove();
+                    let valor = fila[columna];
+                    
+                    if (columna === 'fecha_hora' && valor) {
+                        valor = new Date(valor).toLocaleString('es-ES', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        });
+                    }
 
-        const paginacion = document.createElement('div');
-        paginacion.id = 'paginacion';
-        paginacion.className = 'flex justify-center items-center py-4 space-x-2';
+                    if (columna === 'tipo_accion' && valor) {
+                        td.innerHTML = crearBadgeTipoAccion(valor);
+                    } else if (columna === 'cedula' && valor) {
+                        td.textContent = valor;
+                        td.className += ' font-mono';
+                    } else if (columna === 'rol' && valor) {
+                        td.innerHTML = crearBadgeRol(valor);
+                    } else {
+                        td.textContent = valor || 'N/A';
+                    }
 
-        const btnAnterior = document.createElement('button');
-        btnAnterior.textContent = 'Anterior';
-        btnAnterior.className = 'px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50';
-        btnAnterior.disabled = paginaActual === 1;
-        btnAnterior.onclick = () => {
-            if (paginaActual > 1) {
-                paginaActual--;
-                generarTabla();
-            }
-        };
+                    tr.appendChild(td);
+                });
 
-        const info = document.createElement('span');
-        info.className = 'text-sm text-gray-700';
-        info.textContent = `Página ${paginaActual} de ${totalPaginas}`;
+                body.appendChild(tr);
+            });
 
-        const btnSiguiente = document.createElement('button');
-        btnSiguiente.textContent = 'Siguiente';
-        btnSiguiente.className = 'px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50';
-        btnSiguiente.disabled = paginaActual >= totalPaginas;
-        btnSiguiente.onclick = () => {
-            if (paginaActual < totalPaginas) {
-                paginaActual++;
-                generarTabla();
-            }
-        };
-
-        paginacion.appendChild(btnAnterior);
-        paginacion.appendChild(info);
-        paginacion.appendChild(btnSiguiente);
-
-        contenedor.after(paginacion);
-    }
-
-    function crearBadgeTipoAccion(tipo) {
-        const colores = {
-            'registro': 'bg-green-100 text-green-800',
-            'actualizacion': 'bg-yellow-100 text-yellow-800',
-            'inicio_sesion': 'bg-blue-100 text-blue-800',
-            'cierre_sesion': 'bg-red-100 text-red-800',
-            'verificacion': 'bg-purple-100 text-purple-800'
-        };
-        const color = colores[tipo] || 'bg-gray-100 text-gray-800';
-        return `<span class="px-2 py-1 text-xs font-semibold rounded-full ${color}">${tipo}</span>`;
-    }
-
-    function formatearNombreColumna(nombre) {
-        const mapeo = {
-            'id': 'ID',
-            'users_id': 'Usuario ID',
-            'estudiante_id': 'Estudiante ID',
-            'tipo_accion': 'Tipo de Acción',
-            'descripcion': 'Descripción',
-            'fecha_hora': 'Fecha y Hora'
-        };
-        return mapeo[nombre] || nombre.replace('_', ' ').toUpperCase();
-    }
-
-    function aplicarFiltros() {
-        const busqueda = document.getElementById('searchInput').value.toLowerCase();
-        const filtroAccion = document.getElementById('filtroAccion').value;
-        const filtroFecha = document.getElementById('filtroFecha').value;
-
-        datosFiltrados = datosOriginales.filter(fila => {
-            if (busqueda) {
-                const textoFila = Object.values(fila).join(' ').toLowerCase();
-                if (!textoFila.includes(busqueda)) return false;
-            }
-
-            if (filtroAccion && fila.tipo_accion !== filtroAccion) return false;
-
-            if (filtroFecha && fila.fecha_hora) {
-                const fechaRegistro = new Date(fila.fecha_hora).toISOString().split('T')[0];
-                if (fechaRegistro !== filtroFecha) return false;
-            }
-
-            return true;
-        });
-
-        paginaActual = 1;
-        generarTabla();
-        actualizarEstadisticas();
-    }
-
-    function actualizarEstadisticas() {
-        document.getElementById('totalRegistros').textContent = datosOriginales.length;
-        document.getElementById('registrosVisibles').textContent = datosFiltrados.length;
-
-        const hoy = new Date().toISOString().split('T')[0];
-        const registrosHoy = datosOriginales.filter(fila => {
-            if (!fila.fecha_hora) return false;
-            return new Date(fila.fecha_hora).toISOString().split('T')[0] === hoy;
-        }).length;
-
-        const haceUnaSemana = new Date();
-        haceUnaSemana.setDate(haceUnaSemana.getDate() - 7);
-        const registrosSemana = datosOriginales.filter(fila => {
-            if (!fila.fecha_hora) return false;
-            return new Date(fila.fecha_hora) >= haceUnaSemana;
-        }).length;
-
-        document.getElementById('registrosHoy').textContent = registrosHoy;
-        document.getElementById('registrosSemana').textContent = registrosSemana;
-    }
-
-    function limpiarFiltros() {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('filtroAccion').value = '';
-        document.getElementById('filtroFecha').value = '';
-        datosFiltrados = [...datosOriginales];
-        paginaActual = 1;
-        generarTabla();
-        actualizarEstadisticas();
-    }
-
-    function mostrarLoading(mostrar) {
-        const overlay = document.getElementById('loadingOverlay');
-        if (mostrar) {
-            overlay.classList.remove('hidden');
-        } else {
-            overlay.classList.add('hidden');
+            generarControlesPaginacion();
         }
-    }
 
-    function mostrarSinDatos() {
-        document.getElementById('sinDatos').classList.remove('hidden');
-        document.getElementById('tablaHeader').innerHTML = '';
-        document.getElementById('tablaBody').innerHTML = '';
-        const paginacion = document.getElementById('paginacion');
-        if (paginacion) paginacion.remove();
-    }
-</script>
+        function generarControlesPaginacion() {
+            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
+            const contenedor = document.getElementById('paginacionContainer');
 
+            // Limpiar paginacion previa
+            contenedor.innerHTML = '';
+
+            if (totalPaginas <= 1) return;
+
+            const paginacion = document.createElement('div');
+            paginacion.id = 'paginacion';
+            paginacion.className = 'flex justify-center gap-2 py-2';
+
+            const btnAnterior = document.createElement('button');
+            btnAnterior.innerHTML = '<i class="fas fa-chevron-left mr-1"></i> Anterior';
+            btnAnterior.className = 'px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition';
+            btnAnterior.disabled = paginaActual === 1;
+            btnAnterior.onclick = () => {
+                if (paginaActual > 1) {
+                    paginaActual--;
+                    generarTabla();
+                }
+            };
+
+            const btnSiguiente = document.createElement('button');
+            btnSiguiente.innerHTML = 'Siguiente <i class="fas fa-chevron-right ml-1"></i>';
+            btnSiguiente.className = 'px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition';
+            btnSiguiente.disabled = paginaActual === totalPaginas;
+            btnSiguiente.onclick = () => {
+                if (paginaActual < totalPaginas) {
+                    paginaActual++;
+                    generarTabla();
+                }
+            };
+
+            paginacion.appendChild(btnAnterior);
+
+            // Números de página con ventana dinámica
+            const inicioVentana = Math.max(1, paginaActual - 2);
+            const finVentana = Math.min(totalPaginas, paginaActual + 2);
+
+            for (let i = inicioVentana; i <= finVentana; i++) {
+                const btnPagina = document.createElement('button');
+                btnPagina.textContent = i;
+                btnPagina.className = i === paginaActual
+                    ? 'px-3 py-1.5 text-sm bg-blue-800 text-white rounded-md'
+                    : 'px-3 py-1.5 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition cursor-pointer';
+
+                btnPagina.onclick = () => {
+                    paginaActual = i;
+                    generarTabla();
+                };
+                paginacion.appendChild(btnPagina);
+            }
+
+            paginacion.appendChild(btnSiguiente);
+            contenedor.appendChild(paginacion);
+        }
+
+
+        function aplicarFiltros() {
+            let filtrados = [...datosOriginales];
+
+            if (tipoReporteActual === 'estudiantes') {
+                // Filtros específicos para estudiantes
+                const nombre = document.getElementById('filtroNombreEst').value.toLowerCase();
+                const apellido = document.getElementById('filtroApellidoEst').value.toLowerCase();
+                const cedula = document.getElementById('filtroCedula').value.toLowerCase();
+                const carrera = document.getElementById('filtroCarrera').value.toLowerCase();
+                const semestre = document.getElementById('filtroSemestre').value.toLowerCase();
+                const fecha = document.getElementById('filtroFechaEst').value;
+                const busquedaGeneral = document.getElementById('busquedaGeneralEst').value.toLowerCase();
+
+                filtrados = filtrados.filter(item => {
+                    const matchNombre = !nombre || (item.nombres && item.nombres.toLowerCase().includes(nombre));
+                    const matchApellido = !apellido || (item.apellidos && item.apellidos.toLowerCase().includes(apellido));
+                    const matchCedula = !cedula || (item.cedula && item.cedula.toLowerCase().includes(cedula));
+                    const matchCarrera = !carrera || (item.carrera && item.carrera.toLowerCase().includes(carrera));
+                    const matchSemestre = !semestre || (item.semestre && item.semestre.toLowerCase().includes(semestre));
+                    
+                    let matchFecha = true;
+                    if (fecha) {
+                        const fechaItem = new Date(item.fecha_hora).toISOString().split('T')[0];
+                        matchFecha = fechaItem === fecha;
+                    }
+
+                    let matchGeneral = true;
+                    if (busquedaGeneral) {
+                        const textoBusqueda = `${item.nombre_completo || ''} ${item.cedula || ''} ${item.carrera || ''} ${item.semestre || ''} ${item.tipo_accion || ''} ${item.descripcion || ''}`.toLowerCase();
+                        matchGeneral = textoBusqueda.includes(busquedaGeneral);
+                    }
+
+                    return matchNombre && matchApellido && matchCedula && matchCarrera && matchSemestre && matchFecha && matchGeneral;
+                });
+            } else {
+                // Filtros específicos para usuarios
+                const nombreUsuario = document.getElementById('filtroNombreUsuario').value.toLowerCase();
+                const rol = document.getElementById('filtroRolUsuarios').value;
+                const accion = document.getElementById('filtroAccionUsuarios').value;
+                const fecha = document.getElementById('filtroFechaUsuarios').value;
+                const busquedaGeneral = document.getElementById('busquedaGeneralUsuarios').value.toLowerCase();
+                const idUsuario = document.getElementById('filtroIdUsuario').value;
+
+                filtrados = filtrados.filter(item => {
+                    const matchNombre = !nombreUsuario || (item.nombre_usuario && item.nombre_usuario.toLowerCase().includes(nombreUsuario));
+                    const matchRol = !rol || item.rol === rol;
+                    const matchAccion = !accion || item.tipo_accion === accion;
+                    const matchId = !idUsuario || item.user_id == idUsuario;
+                    
+                    let matchFecha = true;
+                    if (fecha) {
+                        const fechaItem = new Date(item.fecha_hora).toISOString().split('T')[0];
+                        matchFecha = fechaItem === fecha;
+                    }
+
+                    let matchGeneral = true;
+                    if (busquedaGeneral) {
+                        const textoBusqueda = `${item.nombre_usuario || ''} ${item.rol || ''} ${item.tipo_accion || ''} ${item.descripcion || ''}`.toLowerCase();
+                        matchGeneral = textoBusqueda.includes(busquedaGeneral);
+                    }
+
+                    return matchNombre && matchRol && matchAccion && matchId && matchFecha && matchGeneral;
+                });
+            }
+
+            datosFiltrados = filtrados;
+            paginaActual = 1;
+            generarTabla();
+            actualizarEstadisticas();
+        }
+
+        function limpiarFiltros() {
+            if (tipoReporteActual === 'estudiantes') {
+                document.getElementById('filtroNombreEst').value = '';
+                document.getElementById('filtroApellidoEst').value = '';
+                document.getElementById('filtroCedula').value = '';
+                document.getElementById('filtroCarrera').value = '';
+                document.getElementById('filtroSemestre').value = '';
+                document.getElementById('filtroFechaEst').value = '';
+                document.getElementById('busquedaGeneralEst').value = '';
+            } else {
+                document.getElementById('filtroNombreUsuario').value = '';
+                document.getElementById('filtroRolUsuarios').value = '';
+                document.getElementById('filtroAccionUsuarios').value = '';
+                document.getElementById('filtroFechaUsuarios').value = '';
+                document.getElementById('busquedaGeneralUsuarios').value = '';
+                document.getElementById('filtroIdUsuario').value = '';
+            }
+            
+            datosFiltrados = [...datosOriginales];
+            paginaActual = 1;
+            generarTabla();
+            actualizarEstadisticas();
+        }
+
+        function formatearNombreColumna(columna) {
+            const nombres = {
+                'id': 'ID',
+                'nombre_completo': 'Nombre Completo',
+                'cedula': 'Cédula',
+                'carrera': 'Carrera',
+                'semestre': 'Semestre',
+                'tipo_accion': 'Tipo de Acción',
+                'descripcion': 'Descripción',
+                'fecha_hora': 'Fecha y Hora',
+                'nombre_usuario': 'Usuario',
+                'rol': 'Rol'
+            };
+            return nombres[columna] || columna.replace('_', ' ').toUpperCase();
+        }
+
+        function crearBadgeTipoAccion(tipo) {
+            const colores = {
+                'habilitacion': 'bg-green-100 text-green-800',
+                'deshabilitacion': 'bg-red-100 text-red-800',
+                'verificacion': 'bg-blue-100 text-blue-800',
+                'registro': 'bg-purple-100 text-purple-800',
+                'actualizacion': 'bg-yellow-100 text-yellow-800',
+                'inicio_sesion': 'bg-green-100 text-green-800',
+                'cierre_sesion': 'bg-red-100 text-red-800',
+                'eliminacion': 'bg-red-100 text-red-800',
+                'creacion': 'bg-blue-100 text-blue-800'
+            };
+            
+            const color = colores[tipo] || 'bg-gray-100 text-gray-800';
+            return `<span class="px-2 py-1 rounded-full text-xs font-medium ${color}">${tipo.replace('_', ' ').toUpperCase()}</span>`;
+        }
+
+        function crearBadgeRol(rol) {
+            const colores = {
+                'admin': 'bg-red-100 text-red-800',
+                'operador': 'bg-blue-100 text-blue-800'
+            };
+            
+            const color = colores[rol] || 'bg-gray-100 text-gray-800';
+            return `<span class="px-2 py-1 rounded-full text-xs font-medium ${color}">${rol.toUpperCase()}</span>`;
+        }
+
+        function actualizarEstadisticas() {
+            const total = datosOriginales.length;
+            const visibles = datosFiltrados.length;
+            
+            const hoy = new Date();
+            const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+            const inicioSemana = new Date(hoy);
+            inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+            inicioSemana.setHours(0, 0, 0, 0);
+            
+            const registrosHoy = datosOriginales.filter(item => {
+                const fechaItem = new Date(item.fecha_hora);
+                return fechaItem >= inicioHoy;
+            }).length;
+            
+            const registrosSemana = datosOriginales.filter(item => {
+                const fechaItem = new Date(item.fecha_hora);
+                return fechaItem >= inicioSemana;
+            }).length;
+            
+            document.getElementById('totalRegistros').textContent = total;
+            document.getElementById('registrosVisibles').textContent = visibles;
+            document.getElementById('registrosHoy').textContent = registrosHoy;
+            document.getElementById('registrosSemana').textContent = registrosSemana;
+        }
+
+        function mostrarLoading(mostrar) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (mostrar) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function mostrarSinDatos() {
+            document.getElementById('sinDatos').classList.remove('hidden');
+            document.getElementById('tablaHeader').innerHTML = '';
+            document.getElementById('tablaBody').innerHTML = '';
+        }
+    </script>
 </body>
 </html>

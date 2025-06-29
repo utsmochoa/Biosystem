@@ -32,19 +32,7 @@ Route::middleware('guest')->group(function () {
 
 // Ruta de logout común
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', function (Request $request) {
-        $inactive = $request->input('inactive');
-    
-        Auth::logout();
-    
-        $redirect = redirect()->route('login');
-    
-        if ($inactive) {
-            $redirect->with('logout_reason', 'Tu sesión ha sido cerrada automáticamente por inactividad.');
-        }
-    
-        return $redirect;
-    })->name('logout');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     
     // Rutas para usuarios con rol 'operador'
     Route::middleware('auth', 'operador')->group(function () {
@@ -88,9 +76,11 @@ Route::middleware('auth')->group(function () {
         /* eliminar estudiante*/
         Route::get('/admin/gestion-estudiante/eliminar-estudiante', [AdminController::class, 'eliminarEstudiante'])->name('Gestion.eliminar');
         Route::delete('/admin/gestion-estudiante/eliminar-estudiante/{id}', [AdminController::class, 'destroy'])->name('admin.estudiantes.destroy');
-        Route::get('/admin/gestion-estudiante/eliminar-estudiante/exito', [AdminController::class, 'eliminarEstudianteExito']);
+        // Nueva ruta para deshabilitar estudiante
+        Route::put('/admin/gestion-estudiante/deshabilitar-estudiante/{id}', [AdminController::class, 'deshabilitarEstudiante'])->name('Gestion.deshabilitar');
+        Route::put('/admin/gestion-estudiante/habilitar-estudiante/{id}', [AdminController::class, 'habilitarEstudiante'])->name('Gestion.habilitar');
 
-        //pantalla de administrador (configuracion del dispositivo biometrico)
+
 
 
         Route::get('/admin/configurar-sistema/', [AdminController::class, 'configurarSistema'])->name('Configurar.index');

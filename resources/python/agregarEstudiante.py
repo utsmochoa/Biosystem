@@ -522,7 +522,7 @@ class FingerprintEnrollGUI:
         self.cancel_button.config(state=NORMAL)
         
         if success:
-            self.status_label.config(text="¡Huella registrada exitosamente!", fg='#27ae60')
+            self.status_label.config(text="¡Huella registrada! Cerrando ventana...", fg='#27ae60')
             self.countdown_label.config(text="✅", fg='#27ae60')
         else:
             self.status_label.config(text="Error en el registro", fg='#e74c3c')
