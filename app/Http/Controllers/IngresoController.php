@@ -106,6 +106,7 @@ class IngresoController extends Controller
         }
     }
 
+    // FUNCIÓN ORIGINAL PARA BÚSQUEDA DESDE info.blade.php (mantiene funcionalidad original)
     public function buscarPorCedula(Request $request)
     {
         $request->validate([
@@ -139,6 +140,52 @@ class IngresoController extends Controller
         return view('Ingreso.info', compact('estudiante'))->with('success', 'Estudiante encontrado exitosamente');
     }
 
+    // NUEVA FUNCIÓN PARA LA PANTALLA DE VERIFICACIÓN POR CÉDULA
+    public function verificacionCedula()
+    {
+        return view('Ingreso.verificacion_cedula');
+    }
+
+    // NUEVA FUNCIÓN PARA BÚSQUEDA DESDE LA PANTALLA DE VERIFICACIÓN
+    public function buscarPorCedulaVerificacion(Request $request)
+    {
+        $request->validate([
+            'cedula' => 'required|string|max:20'
+        ]);
+
+        $cedulaIngresada = $request->input('cedula');
+        $cedulaLimpia = preg_replace('/[^0-9]/', '', $cedulaIngresada);
+
+        $estudiante = estudiantes::where(function ($query) use ($cedulaLimpia) {
+                $query->whereRaw("REPLACE(REPLACE(cedula_identidad, '.', ''), ' ', '') = ?", [$cedulaLimpia])
+                      ->orWhere('cedula_identidad', $cedulaLimpia);
+            })
+            ->where('activo', true)
+            ->first();
+
+        if (!$estudiante) {
+            $cedulaFormateada = $this->formatearCedula($cedulaLimpia);
+            // Retorna a la misma vista pero sin datos del estudiante y con error
+            return view('Ingreso.verificacion_cedula')
+                ->with('error', 'No se encontró ningún estudiante activo con la cédula: ' . $cedulaFormateada);
+                
+        }
+
+        $estudianteName = $estudiante->nombres . ' ' . $estudiante->apellidos;
+
+        // Crear reporte de verificación
+        reportesEstudiantes::create([
+            'estudiante_id' => $estudiante->id,
+            'tipo_accion' => 'verificacion',
+            'descripcion' => 'Verificación de estudiante por cédula desde pantalla dedicada para: ' . $estudianteName,
+            'fecha_hora' => Carbon::now('America/Caracas'),
+        ]);
+
+        // Retorna a la misma vista pero con los datos del estudiante
+        return view('Ingreso.verificacion_cedula', compact('estudiante'))
+            ->with('success', 'Estudiante encontrado exitosamente');
+    }
+
     private function formatearCedula($cedula)
     {
         if (strlen($cedula) == 8) {
@@ -148,5 +195,13 @@ class IngresoController extends Controller
         } else {
             return $cedula;
         }
+    }
+    
+    public function mostrarInformacionCedula($id)
+    {
+        $estudiante = estudiantes::where('id', $id)
+                                 ->where('activo', true)
+                                 ->firstOrFail();
+        return view('Ingreso.info_cedula', compact('estudiante'));
     }
 }

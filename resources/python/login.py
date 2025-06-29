@@ -176,7 +176,7 @@ def verify_fingerprint_with_database(root, estatus_label):
     # Configurar parámetros básicos
     res = ftrdll.FTRSetParam(FTR_PARAM_CB_FRAME_SOURCE, FSD_FUTRONIC_USB)
     if res != 0:
-        mensaje_error = f"FTRSetParam(CB_FRAME_SOURCE) falló con código {res}"
+        mensaje_error = f"No se detecta dispositivo biometrico. Cod: {res}"
         estatus_label.config(text=mensaje_error)
         root.update()
         retornar_resultado(error=mensaje_error)

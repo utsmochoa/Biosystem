@@ -8,6 +8,16 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
 </head>
+<style>
+  .btn-disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: #ccc !important;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
 <body class="min-h-screen bg-blue-200 flex justify-center items-center">
   <div class="bg-white shadow-md rounded-md p-6 w-full max-w-4xl">
     <div class="relative mb-2">
@@ -131,7 +141,11 @@
           id="btn-agregar-huella"
           class="ml-2 bg-green-500 text-white px-2 py-2 rounded-md hover:bg-green-600 transition-colors duration-300 transform hover:scale-105 flex items-center"
           onclick="iniciarCapturaHuella(currentEstudianteId)">
-          <i class="fas fa-fingerprint mr-2"></i>Añadir huella
+          <i class="fas fa-fingerprint mr-2"></i>
+          <span id="btn-text">Añadir huella</span>
+          <span id="btn-loading" class="hidden ml-2">
+            <i class="fas fa-spinner fa-spin"></i>
+          </span>
         </button>
       </div>
     </div>
@@ -268,13 +282,19 @@
         // Cancelar la captura en proceso
         capturaEnProceso = false;
         mostrarAlerta('warning', 'Captura de huella cancelada');
+        
+        // Reactivar el botón
+        const btn = document.getElementById('btn-agregar-huella');
+        btn.classList.remove('btn-disabled');
+        btn.disabled = false;
+        document.getElementById('btn-text').classList.remove('hidden');
+        document.getElementById('btn-loading').classList.add('hidden');
       }
       cerrarModalCaptura();
     }
 
-    function iniciarCapturaHuella(currentEstudianteId) {
-          
-      if (!currentEstudianteId) {
+    function iniciarCapturaHuella(estudianteId) {
+      if (!estudianteId) {
         mostrarAlerta('error', 'No se ha seleccionado un estudiante');
         return;
       }
@@ -283,6 +303,13 @@
         mostrarAlerta('warning', 'Ya hay una captura en proceso');
         return;
       }
+
+      // Desactivar el botón
+      const btn = document.getElementById('btn-agregar-huella');
+      btn.classList.add('btn-disabled');
+      btn.disabled = true;
+      document.getElementById('btn-text').classList.add('hidden');
+      document.getElementById('btn-loading').classList.remove('hidden');
 
       // Cerrar modal de detalles y abrir modal de captura
       cerrarModal();
@@ -296,8 +323,9 @@
       document.getElementById('btn-cancelar-captura').innerHTML = '<i class="fas fa-times mr-2"></i> Cancelar';
       
       capturaEnProceso = true;
+      currentEstudianteId = estudianteId;
 
-      const url = baseCapturarUrl.replace('__id__', currentEstudianteId);
+      const url = baseCapturarUrl.replace('__id__', estudianteId);
 
       // Realizar petición AJAX para capturar huella
       fetch(url, {
@@ -354,6 +382,16 @@
         
         mostrarAlerta('error', 'Error de conexión al capturar la huella');
         console.error('Error:', error);
+      })
+      .finally(() => {
+        // Reactivar el botón solo si la captura fue cancelada
+        if (!capturaEnProceso) {
+          const btn = document.getElementById('btn-agregar-huella');
+          btn.classList.remove('btn-disabled');
+          btn.disabled = false;
+          document.getElementById('btn-text').classList.remove('hidden');
+          document.getElementById('btn-loading').classList.add('hidden');
+        }
       });
     }
 

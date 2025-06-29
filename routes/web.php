@@ -37,13 +37,24 @@ Route::middleware('auth')->group(function () {
     // Rutas para usuarios con rol 'operador'
     Route::middleware('auth', 'operador')->group(function () {
         //pantalla principal de ingreso de estudiantes (despues de iniciar sesion el personal de seguridad)
-        Route::post('/buscar-por-cedula', [IngresoController::class, 'buscarPorCedula'])->name('buscar.cedula');
+        
+        // RUTAS ORIGINALES PARA VERIFICACIÓN POR HUELLA
         Route::get('/ingreso', [IngresoController::class, 'index'])->name('Ingreso.index');
         Route::get('/ingreso/verificar-huella', [IngresoController::class, 'verificarHuella'])->name('Ingreso.verificar');
         Route::post('/ingreso', [IngresoController::class, 'obtenerEstudianteId']);
         Route::get('/ingreso/error', [IngresoController::class, 'error'])->name('Ingreso.error');
         Route::get('/ingreso/informacion', [IngresoController::class, 'informacion']);
         Route::get('/ingreso/informacion/{estudiante_id}', [IngresoController::class, 'mostrarInformacion'])->name('Ingreso.Info');
+        
+        // RUTA ORIGINAL PARA BÚSQUEDA DESDE info.blade.php (modal)
+        Route::post('/buscar-por-cedula', [IngresoController::class, 'buscarPorCedula'])->name('buscar.cedula');
+        
+        // NUEVAS RUTAS PARA VERIFICACIÓN DEDICADA POR CÉDULA
+        Route::get('/ingreso/verificacion-cedula', [IngresoController::class, 'verificacionCedula'])->name('Ingreso.verificacion.cedula');
+Route::post('/ingreso/verificacion-cedula', [IngresoController::class, 'buscarPorCedulaVerificacion'])->name('buscar.cedula.verificacion');
+        
+        // RUTA PARA LA VISTA DE INFORMACIÓN DESDE CÉDULA (si aún la necesitas)
+        Route::get('/ingreso/informacion-cedula/{estudiante_id}', [IngresoController::class, 'mostrarInformacionCedula'])->name('Ingreso.Info.cedula');
     });
     
     // Rutas para usuarios con rol 'admin'
@@ -115,8 +126,3 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/estudiantes/{id}/deuda', [AdminController::class, 'actualizarDeuda'])->name('actualizar.deuda');
     });
 });
-
-
-
-
-

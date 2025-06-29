@@ -67,6 +67,10 @@ class HuellaLoginController extends Controller
                 return $this->processBiometricLogin($jsonData['users_id']);
             }
 
+            
+            return redirect()->route('login')
+                ->with('logout_reason', 'Verificación fallida: ' . ($jsonData['error'] ?? 'Error desconocido'));
+
             return response()->json([
                 'success' => false,
                 'error' => $jsonData['error'] ?? 'Verificación fallida'
@@ -124,41 +128,5 @@ class HuellaLoginController extends Controller
     }
 
 
-    
 
-    /**
-     * Cierra la sesión
-     */
-    // public function logout(Request $request)
-    // {
-    //     $user = Auth::user();
-    //     if ($user) {
-    //         Log::info('Logout de usuario', ['user_id' => $user->id]);
-    //         if ($user->rol === 'admin') {
-    //             reportesUsuarios::create([
-    //                 'users_id' => $user->id,
-    //                 'tipo_accion' => 'cierre_sesion',
-    //                 'descripcion' => "Cierre de sesión de administrador {$user->name}.",
-    //                 'fecha_hora' => Carbon::now('America/Caracas'),
-    //             ]);
-    //         } else {
-    //             reportesUsuarios::create([
-    //                 'users_id' => $user->id,
-    //                 'tipo_accion' => 'cierre_sesion',
-    //                 'descripcion' => "Cierre de sesion de personal con huella de seguridad {$user->name}.",
-    //                 'fecha_hora' => Carbon::now('America/Caracas'),
-    //             ]);
-    //         }
-            
-    //     }
-
-    //     Auth::logout();
-    //     $request->session()->invalidate();
-    //     $request->session()->regenerateToken();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Sesión cerrada correctamente'
-    //     ]);
-    // }
 }

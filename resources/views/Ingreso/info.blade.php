@@ -52,7 +52,7 @@
                 </div>
             </div>
             <!-- Botón de solicitud por huella -->
-            <button id="nueva-verificacion-huella" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            <button id="nueva-verificacion-huella" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300">
                 Presione [ENTER] para una nueva solicitud
             </button>
         </div>
@@ -74,7 +74,7 @@
             <h2 class="text-xl font-bold text-center mb-4">Opciones de Consulta</h2>
             <div class="flex flex-col items-center space-y-2">
                 <button id="buscar-por-cedula" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
-                    Presione [ESPACIO] para realizar una solicitud con C.I
+                    <a href="{{ route('Ingreso.verificacion.cedula') }}">Presione aca para realizar una solicitud con C.I</a>
                 </button>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -83,42 +83,6 @@
                     </button>
                 </form>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal para búsqueda por cédula -->
-    <div id="modal-cedula" class="modal">
-        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-            <h3 class="text-lg font-bold mb-4 text-center">Buscar por Cédula de Identidad</h3>
-            <form id="form-cedula" action="{{ route('buscar.cedula') }}" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <label for="cedula" class="block text-sm font-medium text-gray-700 mb-2">
-                        Ingrese la cédula de identidad:
-                    </label>
-                    <input type="text" 
-                           id="cedula" 
-                           name="cedula" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           placeholder="Ej: 12345678"
-                           value="{{ old('cedula') }}"
-                           required>
-                </div>
-                <div class="flex space-x-3">
-                    <button type="submit" 
-                            class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Buscar
-                    </button>
-                    <button type="button" 
-                            id="cancelar-cedula"
-                            class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-            <p class="text-xs text-gray-500 mt-3 text-center">
-                Presione ESC para cancelar
-            </p>
         </div>
     </div>
 
@@ -145,42 +109,143 @@
         </div>
     @endif
 
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+        @csrf
+        <input type="hidden" name="inactive" id="inactive" value="0">
+    </form>
+
+    <div id="inactivity-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">⚠ Inactividad detectada</h2>
+            <p class="text-gray-600 mb-4">Tu sesión se cerrará automáticamente en 1 minuto.</p>
+            <button onclick="closeModal()" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                Entendido
+            </button>
+        </div>
+    </div>
+
     <script>
+        let timeoutDuration = 4 * 60 * 1000; // 4 min
+        let warningDuration = 1 * 60 * 1000; // 1 min
+    
+        let warningTimer, logoutTimer;
+    
+        function startTimers() {
+            warningTimer = setTimeout(() => {
+                document.getElementById('inactivity-modal').classList.remove('hidden');
+            }, warningDuration);
+    
+            logoutTimer = setTimeout(() => {
+                document.getElementById('inactive').value = '1';
+                document.getElementById('logout-form').submit(); // se hace POST correctamente
+            }, timeoutDuration);
+    
+    
+        }
+    
+        function resetTimers() {
+            clearTimeout(warningTimer);
+            clearTimeout(logoutTimer);
+            startTimers();
+        }
+    
+        function closeModal() {
+            document.getElementById('inactivity-modal').classList.add('hidden');
+        }
+    
+        // Inicia los temporizadores al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            startTimers();
+        });
+    
+        // Resetea los temporizadores con actividad del usuario
+        ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                resetTimers();
+                closeModal(); // Solo se cierra si el usuario se mueve
+            });
+        });
+
         let modalAbierto = false;
+        let verificacionEnProceso = false; // Variable de control para evitar múltiples ejecuciones
+        
         const modal = document.getElementById('modal-cedula');
         const inputCedula = document.getElementById('cedula');
         const formCedula = document.getElementById('form-cedula');
         
-        // Función para realizar nueva verificación por huella
+        // Función mejorada para realizar nueva verificación por huella
         function nuevaVerificacionHuella() {
-            if (!modalAbierto) {
-                window.location.href = "{{ url('ingreso/verificar-huella') }}";
+            if (!modalAbierto && !verificacionEnProceso) {
+                // Marcar que la verificación está en proceso
+                verificacionEnProceso = true;
+                
+                // Obtener referencia al botón
+                const botonVerificacion = document.getElementById('nueva-verificacion-huella');
+                
+                // Desactivar el botón visualmente
+                botonVerificacion.disabled = true;
+                botonVerificacion.classList.remove('hover:bg-blue-600', 'bg-blue-500');
+                botonVerificacion.classList.add('bg-gray-400', 'cursor-not-allowed');
+                
+                // Cambiar el contenido del botón con spinner
+                botonVerificacion.innerHTML = `
+                    <div class="flex items-center justify-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Procesando solicitud...
+                    </div>
+                `;
+                
+                // Redirigir después de un pequeño delay para mostrar el cambio visual
+                setTimeout(() => {
+                    window.location.href = "{{ url('ingreso/verificar-huella') }}";
+                }, 500);
             }
         }
 
         // Función para abrir modal de búsqueda por cédula
         function abrirModalCedula() {
-            modalAbierto = true;
-            modal.classList.add('show');
-            inputCedula.focus();
+            if (!verificacionEnProceso) {
+                modalAbierto = true;
+                if (modal) {
+                    modal.classList.add('show');
+                    if (inputCedula) {
+                        inputCedula.focus();
+                    }
+                }
+            }
         }
 
         // Función para cerrar modal
         function cerrarModal() {
             modalAbierto = false;
-            modal.classList.remove('show');
-            inputCedula.value = '';
+            if (modal) {
+                modal.classList.remove('show');
+            }
+            if (inputCedula) {
+                inputCedula.value = '';
+            }
         }
 
         // Event listeners para botones
         document.getElementById('nueva-verificacion-huella').addEventListener('click', nuevaVerificacionHuella);
-        document.getElementById('buscar-por-cedula').addEventListener('click', abrirModalCedula);
-        document.getElementById('cancelar-cedula').addEventListener('click', cerrarModal);
+        
+        const buscarPorCedulaBtn = document.getElementById('buscar-por-cedula');
+        if (buscarPorCedulaBtn) {
+            buscarPorCedulaBtn.addEventListener('click', abrirModalCedula);
+        }
+        
+        const cancelarCedulaBtn = document.getElementById('cancelar-cedula');
+        if (cancelarCedulaBtn) {
+            cancelarCedulaBtn.addEventListener('click', cerrarModal);
+        }
 
         // Event listener para teclas
         document.addEventListener('keydown', function(event) {
-            // Solo procesar teclas si el modal no está abierto
-            if (!modalAbierto) {
+            // Solo procesar teclas si el modal no está abierto y no hay verificación en proceso
+            if (!modalAbierto && !verificacionEnProceso) {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     nuevaVerificacionHuella();
@@ -190,7 +255,7 @@
                 }
             } else {
                 // Si el modal está abierto, ESC para cerrar
-                if (event.key === 'Escape') {
+                if (event.key === 'Escape' && modalAbierto) {
                     event.preventDefault();
                     cerrarModal();
                 }
@@ -198,11 +263,13 @@
         });
 
         // Cerrar modal al hacer clic en el fondo
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                cerrarModal();
-            }
-        });
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    cerrarModal();
+                }
+            });
+        }
 
         // Auto-cerrar mensajes después de 5 segundos
         const errorMessage = document.getElementById('error-message');
@@ -227,27 +294,31 @@
             }, 100);
         @endif
 
-        // Solo permitir números en el input
-        inputCedula.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-        });
+        // Solo permitir números en el input (si existe)
+        if (inputCedula) {
+            inputCedula.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        }
 
-        // Validación mejorada del formulario
-        formCedula.addEventListener('submit', function(event) {
-            const cedula = inputCedula.value.trim();
-            
-            if (cedula.length < 6) {
-                event.preventDefault();
-                alert('La cédula debe tener al menos 6 dígitos');
-                return false;
-            }
-            
-            if (cedula.length > 12) {
-                event.preventDefault();
-                alert('La cédula no puede tener más de 12 dígitos');
-                return false;
-            }
-        });
+        // Validación mejorada del formulario (si existe)
+        if (formCedula) {
+            formCedula.addEventListener('submit', function(event) {
+                const cedula = inputCedula.value.trim();
+                
+                if (cedula.length < 6) {
+                    event.preventDefault();
+                    alert('La cédula debe tener al menos 6 dígitos');
+                    return false;
+                }
+                
+                if (cedula.length > 12) {
+                    event.preventDefault();
+                    alert('La cédula no puede tener más de 12 dígitos');
+                    return false;
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -22,10 +22,6 @@ class AdminController extends Controller
         return view('Admin.index');
     }
 
-    public function exito(){
-        return "hola mi amor te amo mucho muak besitos en tu boca preciosa";
-    }
-
 
 
     public function añadirEstudianteExistente(Request $request){
@@ -121,9 +117,7 @@ class AdminController extends Controller
         return view('Admin.Gestion-estudiante.Agregar-estudiante.index');
     }
 
-    public function pedirHuellaExistente(){
-        return "hola mi amor te amo mucho muak besitos en tu boca preciosa";
-    }
+
 
     public function pedirDatosNuevo(){
         return view('Admin.Gestion-estudiante.Agregar-estudiante.Agregar-nuevo-estudiante.index');
@@ -134,66 +128,89 @@ class AdminController extends Controller
     }
 
     public function store(Request $request){
+        if ($request->session()->has('registro_en_proceso')) {
+            return back()->with('error', 'Ya se está procesando un registro. Espera unos segundos...');
+        }
+    
+        $request->session()->put('registro_en_proceso', true);
+    
         DB::beginTransaction();
-
+    
         try {
+            if (estudiantes::where('cedula_identidad', $request->cedula_identidad)->exists()) {
+                $request->session()->forget('registro_en_proceso');
+                return back()->withInput()->with('error', 'Ya existe un estudiante con esta cédula.');
+            }
+    
             $estudiante = new estudiantes();
             $estudiante->nombres = $request->nombres;
             $estudiante->apellidos = $request->apellidos;
             $estudiante->cedula_identidad = $request->cedula_identidad;
             $estudiante->carrera = $request->carrera;
             $estudiante->semestre = $request->semestre;
-            $estudiante->activo = true; // Activamos por defecto al crear
-
+            $estudiante->activo = true;
+    
             if ($request->hasFile('foto')) {
-                $foto = $request->file('foto');
-                $estudiante->foto = file_get_contents($foto->getRealPath());
+                $estudiante->foto = file_get_contents($request->file('foto')->getRealPath());
             }
-
+    
             $estudiante->save();
             $estudiante->refresh();
-
-            reportesEstudiantes::create([
-                'estudiante_id' => $estudiante->id,
-                'tipo_accion' => 'registro',
-                'descripcion' => 'Registro de nuevo estudiante exitoso.',
-                'fecha_hora' => Carbon::now('America/Caracas'),
-            ]);
-
-            DB::commit();
-
-            $id = $estudiante->id;
+    
+    
+            DB::commit(); // Se guarda aquí para que Python lo vea
+    
+            // ───── EJECUTAR SCRIPT PYTHON ─────
             $pythonScript = base_path('resources/python/agregarEstudiante.py');
-            $command = escapeshellcmd("python \"$pythonScript\" \"$id\"");
-
+            $command = escapeshellcmd("python \"$pythonScript\" \"{$estudiante->id}\"");
             $output = [];
             $return_var = null;
             exec($command, $output, $return_var);
-
+    
             $jsonResult = null;
             foreach (array_reverse($output) as $line) {
                 $decoded = json_decode($line, true);
                 if ($decoded !== null && isset($decoded['success'])) {
                     $jsonResult = $decoded;
+                    reportesEstudiantes::create([
+                        'estudiante_id' => $estudiante->id,
+                        'tipo_accion' => 'registro',
+                        'descripcion' => 'Registro de nuevo estudiante exitoso.',
+                        'fecha_hora' => Carbon::now('America/Caracas'),
+                    ]);
                     break;
                 }
             }
-
+    
             if (!$jsonResult || !$jsonResult['success']) {
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', $jsonResult['message'] ?? 'Error desconocido en el proceso de captura de huella');
+                // 🔁 Si falla la huella, eliminar estudiante y log
+                DB::beginTransaction();
+    
+                // Borrar registros relacionados
+                reportesEstudiantes::where('estudiante_id', $estudiante->id)->delete();
+                $estudiante->delete();
+    
+                DB::commit();
+    
+                $request->session()->forget('registro_en_proceso');
+    
+                return back()->withInput()->with('error', $jsonResult['message'] ?? 'Error al capturar huella. Registro revertido.');
             }
-
+    
+            $request->session()->forget('registro_en_proceso');
+    
             return view('Admin.Gestion-estudiante.Agregar-estudiante.Agregar-nuevo-estudiante.exito');
-
+    
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Error al procesar el registro: ' . $e->getMessage());
+            $request->session()->forget('registro_en_proceso');
+            return back()->withInput()->with('error', 'Error al procesar el registro: ' . $e->getMessage());
         }
     }
+    
+
+    
+    
 
     public function actualizarEstudiante(){
         $estudiantes = estudiantes::where('activo', true)->get();
@@ -370,9 +387,6 @@ class AdminController extends Controller
         return view('Admin.Configurar-sistema.Crear-roles.Agregar-admin.index');
     }
 
-    public function pedirHuellaAdministrador(){
-        return "hola mi amor te amo mucho muak besitos en tu boca preciosa";
-    }
 
     public function storeAdmin(Request $request){
         $request->validate([
@@ -779,21 +793,12 @@ class AdminController extends Controller
         }
     }
 
-    public function probarDispositivoExito(){
-        return "hola mi amor te amo mucho muak besitos en tu boca preciosa";
-    }
-
-    public function probarDispositivoError(){
-        return "hola mi amor te amo mucho muak besitos en tu boca preciosa";
-    }
 
     public function verDispositivoConectado(){
         return view('Admin.Configurar-sistema.Configurar-dispositivo.Ver-dispositivos.index');
     }
 
-    public function listaDispositivoConectado(){
-        return "hola mi amor te amo mucho muak besitos en tu boca preciosa";
-    }
+
 
     public function gestionarDeudas()
     {

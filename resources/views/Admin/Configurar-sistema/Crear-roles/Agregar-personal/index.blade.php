@@ -66,7 +66,7 @@
                     Siguiente
                   </button>
                 </div>
-              </div>  
+            </div>  
         </form>
     </div>
 
@@ -112,11 +112,9 @@
             document.getElementById('inactivity-modal').classList.add('hidden');
         }
 
-        // Inicia los temporizadores al cargar la página
         window.addEventListener('DOMContentLoaded', () => {
             startTimers();
-            
-            // Validación de contraseñas
+
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirm_password');
             const passwordError = document.getElementById('passwordError');
@@ -144,25 +142,28 @@
             confirmPasswordInput.addEventListener('input', validatePasswords);
             passwordInput.addEventListener('input', validatePasswords);
 
-            // Validación del formulario antes de enviar
             form.addEventListener('submit', function(e) {
                 if (!validatePasswords()) {
                     e.preventDefault();
                     return false;
                 }
-                
-                // Validación adicional del nombre de usuario
+
                 const username = document.getElementById('name').value;
                 if (username.length > 15) {
                     e.preventDefault();
                     alert('El nombre de usuario no puede exceder los 15 caracteres');
                     return false;
                 }
-                
+
+                // ✅ Desactivar botón al hacer clic
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                submitBtn.classList.remove('hover:bg-blue-600', 'hover:scale-105');
+                submitBtn.innerHTML = `<span>Procesando...</span> <i class="fas fa-spinner fa-spin ml-2"></i>`;
+
                 return true;
             });
 
-            // Validación en tiempo real del nombre de usuario
             document.getElementById('name').addEventListener('input', function(e) {
                 if (e.target.value.length > 15) {
                     e.target.value = e.target.value.substring(0, 15);
@@ -170,7 +171,6 @@
             });
         });
 
-        // Resetea los temporizadores con actividad del usuario
         ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
             window.addEventListener(evt, () => {
                 resetTimers();
@@ -178,7 +178,6 @@
             });
         });
 
-        // Oculta el mensaje de error tras 5 segundos
         setTimeout(() => {
             const alert = document.querySelector('.bg-red-50.border-red-200');
             if (alert) {

@@ -226,6 +226,9 @@
         });
 
         
+        // Variable para controlar el estado del botón
+        let isUpdatingFingerprint = false;
+
         function mostrarModal(id, nombres, apellidos, cedula, carrera, semestre) {
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('estudiante-id').value = id;
@@ -252,7 +255,21 @@
         }
 
         function actualizarHuella() {
+            // Si ya está en proceso, no hacer nada
+            if (isUpdatingFingerprint) return;
+            
+            // Marcar que estamos en proceso
+            isUpdatingFingerprint = true;
+            
             const id = document.getElementById('estudiante-id').value;
+            
+            // Deshabilitar botón visualmente
+            const fingerprintBtn = document.querySelector('button[onclick="actualizarHuella()"]');
+            if (fingerprintBtn) {
+                fingerprintBtn.disabled = true;
+                fingerprintBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                fingerprintBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Procesando...';
+            }
             
             // Mostrar overlay de carga
             document.getElementById('loadingOverlay').classList.remove('hidden');
@@ -292,28 +309,29 @@
                 }, 500);
             });
         }, 5000);
+        
         // Filtro de búsqueda 
         document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        
-        searchInput.addEventListener('keyup', function() {
-            const searchText = this.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
+            const searchInput = document.getElementById('searchInput');
             
-            rows.forEach(row => {
-            const id = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
-            const nombres = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            const apellidos = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-            const cedula = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-            
-            if (id.includes(searchText) || nombres.includes(searchText) || 
-                apellidos.includes(searchText) || cedula.includes(searchText)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+            searchInput.addEventListener('keyup', function() {
+                const searchText = this.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    const id = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                    const nombres = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    const apellidos = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                    const cedula = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                    
+                    if (id.includes(searchText) || nombres.includes(searchText) || 
+                        apellidos.includes(searchText) || cedula.includes(searchText)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
             });
-        });
         });
     </script>
 </body>

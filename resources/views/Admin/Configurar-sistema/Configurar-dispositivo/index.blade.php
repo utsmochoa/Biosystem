@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>BioSystem | Configuración de dispositivo biométrico</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet"> <!-- Local FontAwesome -->
+    <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
 </head>
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
     <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto">
@@ -42,23 +42,28 @@
         <!-- Botones de acción -->
         <div class="flex flex-col items-center gap-2">
             <a href="{{ route('Ver.dispositivos') }}"
-               class=" py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105">
+            class="py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105 text-center">
                 <i class="fas fa-plug mr-2"></i> Ver dispositivos conectados
             </a>
 
-            <a href="{{ route('Probar.dispositivo') }}"
-               class=" py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105">
-                <i class="fas fa-vial mr-2"></i> Probar dispositivo biométrico
-            </a>
+
+            <!-- Botón con protección contra múltiples clics -->
+            <form id="probar-form" action="{{ route('Probar.dispositivo') }}" method="GET" onsubmit="return bloquearBoton()">
+                @csrf
+                <button id="btn-probar"
+                    type="submit"
+                    class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105s">
+                    <i class="fas fa-vial mr-2"></i> Probar dispositivo biométrico
+                </button>
+            </form>
         </div>
     </div>
+
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
         @csrf
         <input type="hidden" name="inactive" id="inactive" value="0">
     </form>
-    
-    
-    
+
     <div id="inactivity-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
             <h2 class="text-xl font-bold text-gray-800 mb-2">⚠ Inactividad detectada</h2>
@@ -68,48 +73,55 @@
             </button>
         </div>
     </div>
-    
-    
-    
+
     <script>
-        let timeoutDuration = 2 * 60 * 1000; // 2 min
-        let warningDuration = 1 * 60 * 1000; // 1 min
-    
+        // Protección contra spam de clics
+        let botonProbarActivo = true;
+
+        function bloquearBoton() {
+            if (!botonProbarActivo) return false;
+
+            botonProbarActivo = false;
+            const btn = document.getElementById('btn-probar');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Ejecutando...';
+            return true;
+        }
+
+        // Manejo de inactividad
+        let timeoutDuration = 2 * 60 * 1000;
+        let warningDuration = 1 * 60 * 1000;
         let warningTimer, logoutTimer;
-    
+
         function startTimers() {
             warningTimer = setTimeout(() => {
                 document.getElementById('inactivity-modal').classList.remove('hidden');
             }, warningDuration);
-    
+
             logoutTimer = setTimeout(() => {
                 document.getElementById('inactive').value = '1';
-                document.getElementById('logout-form').submit(); // se hace POST correctamente
+                document.getElementById('logout-form').submit();
             }, timeoutDuration);
-    
-    
         }
-    
+
         function resetTimers() {
             clearTimeout(warningTimer);
             clearTimeout(logoutTimer);
             startTimers();
         }
-    
+
         function closeModal() {
             document.getElementById('inactivity-modal').classList.add('hidden');
         }
-    
-        // Inicia los temporizadores al cargar la página
+
         window.addEventListener('DOMContentLoaded', () => {
             startTimers();
         });
-    
-        // Resetea los temporizadores con actividad del usuario
+
         ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
             window.addEventListener(evt, () => {
                 resetTimers();
-                closeModal(); // Solo se cierra si el usuario se mueve
+                closeModal();
             });
         });
     </script>
