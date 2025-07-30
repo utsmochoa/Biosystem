@@ -47,8 +47,8 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+<body class="bg-blue-200 flex items-center justify-center h-screen animate-fade-in">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl ">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <!-- Foto de perfil y estado de solvencia -->
@@ -87,6 +87,7 @@
                     <input type="text" 
                            id="cedula-principal" 
                            name="cedula" 
+                           maxlength="8"
                            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Ingrese cédula..."
                            value="{{ old('cedula') }}"
@@ -183,7 +184,7 @@
 
     <script>
         let timeoutDuration = 4 * 60 * 1000; // 4 min
-        let warningDuration = 1 * 60 * 1000; // 1 min
+        let warningDuration = 3 * 60 * 1000; // 1 min
     
         let warningTimer, logoutTimer;
     
@@ -259,6 +260,16 @@
             modal.classList.add('show');
             inputCedulaModal.focus();
         }
+
+        document.getElementById('cedula-principal').addEventListener('input', function(e) {
+            // Elimina cualquier caracter que no sea número
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Limita a 8 caracteres
+            if (this.value.length > 8) {
+                this.value = this.value.slice(0, 8);
+            }
+        });
 
         // Función para cerrar modal
         function cerrarModal() {

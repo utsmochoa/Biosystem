@@ -30,6 +30,7 @@ class IngresoController extends Controller
 
     public function verificarHuella()
     {
+        try{
         $pythonScript = base_path('resources/python/buscarEstudiante.py');
 
         $process = new Process(['python', $pythonScript]);
@@ -89,6 +90,9 @@ class IngresoController extends Controller
             $mensaje = isset($jsonData['error']) ? $jsonData['error'] : 'Verificación fallida';
             return back()->with('error', $mensaje);
         }
+    }catch(\Exception $e) {
+        return back()->with('error', 'Error al procesar la verificación: Se finalizó la verificación por inactividad');
+        }
     }
 
     public function obtenerEstudianteId(Request $request)
@@ -102,51 +106,17 @@ class IngresoController extends Controller
         if ($estudiante) {
             return response()->json($estudiante);
         } else {
-            return response()->json(['message' => 'Estudiante no encontrado o inactivo'], 404);
+            return back()->with(['error' => 'Estudiante no encontrado o inactivo']);
         }
     }
 
-    // FUNCIÓN ORIGINAL PARA BÚSQUEDA DESDE info.blade.php (mantiene funcionalidad original)
-    public function buscarPorCedula(Request $request)
-    {
-        $request->validate([
-            'cedula' => 'required|string|max:20'
-        ]);
+    
 
-        $cedulaIngresada = $request->input('cedula');
-        $cedulaLimpia = preg_replace('/[^0-9]/', '', $cedulaIngresada);
-
-        $estudiante = estudiantes::where(function ($query) use ($cedulaLimpia) {
-                $query->whereRaw("REPLACE(REPLACE(cedula_identidad, '.', ''), ' ', '') = ?", [$cedulaLimpia])
-                      ->orWhere('cedula_identidad', $cedulaLimpia);
-            })
-            ->where('activo', true)
-            ->first();
-
-        if (!$estudiante) {
-            $cedulaFormateada = $this->formatearCedula($cedulaLimpia);
-            return back()->withInput()->with('error', 'No se encontró ningún estudiante activo con la cédula: ' . $cedulaFormateada);
-        }
-
-        $estudianteName = $estudiante->nombres . ' ' . $estudiante->apellidos;
-
-        reportesEstudiantes::create([
-            'estudiante_id' => $estudiante->id,
-            'tipo_accion' => 'verificacion',
-            'descripcion' => 'Verificación de estudiante por cédula de identidad para: ' . $estudianteName,
-            'fecha_hora' => Carbon::now('America/Caracas'),
-        ]);
-
-        return view('Ingreso.info', compact('estudiante'))->with('success', 'Estudiante encontrado exitosamente');
-    }
-
-    // NUEVA FUNCIÓN PARA LA PANTALLA DE VERIFICACIÓN POR CÉDULA
     public function verificacionCedula()
     {
         return view('Ingreso.verificacion_cedula');
     }
 
-    // NUEVA FUNCIÓN PARA BÚSQUEDA DESDE LA PANTALLA DE VERIFICACIÓN
     public function buscarPorCedulaVerificacion(Request $request)
     {
         $request->validate([
@@ -166,8 +136,8 @@ class IngresoController extends Controller
         if (!$estudiante) {
             $cedulaFormateada = $this->formatearCedula($cedulaLimpia);
             // Retorna a la misma vista pero sin datos del estudiante y con error
-            return view('Ingreso.verificacion_cedula')
-                ->with('error', 'No se encontró ningún estudiante activo con la cédula: ' . $cedulaFormateada);
+            return back()
+                ->with('error', 'No se encontró estudiante activo o existente con la cédula: ' . $cedulaFormateada);
                 
         }
 

@@ -9,7 +9,7 @@
 </head>
 
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+    <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg animate-fade-in">
         <div class="flex justify-between items-center mb-4">
             <img src="{{ asset('images/logo.png') }}" alt="Logo de la empresa" class="h-12">
             <h1 class="text-xl font-bold text-blue-700 pr-24">Agregar administrador</h1>

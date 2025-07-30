@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto">
+    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto animate-fade-in">
 
         <div class="relative mb-2">
             <a href="{{ route('Admin.index') }}"
@@ -18,10 +18,10 @@
                 <i class="fas fa-arrow-left mr-2"></i> Volver
             </a>
 
-            <!-- BACKDOOR: Botón invisible en la esquina superior derecha -->
+            <!-- Boton invisible para gestion de deudas -->
             <a href="{{ route('gestionar.deudas') }}"
                class="absolute right-0 top-0 w-8 h-8 opacity-0 hover:opacity-20 bg-white rounded-full transition-opacity duration-300"
-               title="🤫 Gestión de deudas">
+               title="Gestión de deudas">
             </a>
 
             <!-- Encabezado -->

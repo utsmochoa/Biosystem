@@ -489,7 +489,7 @@ class AgregarHuellaExistenteGUI:
             # Configurar parámetros
             res = ftrdll.FTRSetParam(FTR_PARAM_CB_FRAME_SOURCE, FSD_FUTRONIC_USB)
             if res != FTR_RETCODE_OK:
-                message = f"Error al configurar fuente de frame: {res}"
+                message = f"El dispositivo biometrico no se detecta o no se encuentra conectado. Error: {res}"
                 ftrdll.FTRTerminate()
                 self.show_result(success, message)
                 return

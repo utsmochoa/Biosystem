@@ -30,8 +30,8 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+<body class="bg-blue-200 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl animate-fade-in">
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <!-- Foto de perfil -->
@@ -126,7 +126,7 @@
 
     <script>
         let timeoutDuration = 4 * 60 * 1000; // 4 min
-        let warningDuration = 1 * 60 * 1000; // 1 min
+        let warningDuration = 3 * 60 * 1000; // 1 min
     
         let warningTimer, logoutTimer;
     

@@ -9,7 +9,7 @@
     <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
 </head>
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto">
+    <div class="bg-white shadow-md rounded-md p-10 w-full animate-fade-in max-w-2xl mx-auto">
         <div class="relative mb-2">
             <a href="{{ route('Configurar.index') }}"
                class="absolute left-0 top-4 transform -translate-y-1/2 text-blue-700 hover:text-blue-900 font-medium inline-flex items-center transition">

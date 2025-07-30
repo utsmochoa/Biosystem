@@ -7,9 +7,13 @@
     <title>Reportes del Sistema</title>
     <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet"> <!-- Local FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Agregar bibliotecas para PDF y Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
-    <div class="container mx-auto px-4 py-8">
+<body class="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 animate-fade-in">
+    <div class="container mx-auto px-4 py-8 animate-fade-in">
         <!-- Header -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-6 relative">
             <!-- Botón Volver en la esquina -->
@@ -46,10 +50,26 @@
 
         <!-- Filtros y Búsqueda -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <i class="fas fa-filter mr-2 text-blue-600"></i>
-                Filtros de Búsqueda
-            </h2>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-filter mr-2 text-blue-600"></i>
+                    Filtros de Búsqueda
+                </h2>
+                
+                <!-- Botones de Descarga -->
+                <div class="flex space-x-2">
+                    <button onclick="descargarPDF()" 
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center">
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        Descargar PDF
+                    </button>
+                    <button onclick="descargarExcel()" 
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 flex items-center">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        Descargar Excel
+                    </button>
+                </div>
+            </div>
             
             <!-- Filtros para Estudiantes -->
             <div id="filtrosEstudiantes" class="space-y-4">
@@ -739,6 +759,153 @@
             document.getElementById('sinDatos').classList.remove('hidden');
             document.getElementById('tablaHeader').innerHTML = '';
             document.getElementById('tablaBody').innerHTML = '';
+        }
+
+        
+          // FUNCIONES DE DESCARGA
+          function descargarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4'); // Orientación horizontal para mejor ajuste
+
+            // Título del reporte
+            const titulo = tipoReporteActual === 'estudiantes' 
+                ? 'Historial de Accesos de Estudiantes' 
+                : 'Historial de Usuarios';
+            
+            doc.setFontSize(18);
+            doc.setTextColor(40, 116, 166); // Color azul
+            doc.text(titulo, doc.internal.pageSize.width / 2, 20, { align: 'center' });
+
+            // Fecha de generación
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Generado el: ${new Date().toLocaleString('es-ES')}`, 14, 30);
+            doc.text(`Total de registros: ${datosFiltrados.length}`, 14, 35);
+
+            // Preparar datos para la tabla
+            let columnas, filas;
+            
+            if (tipoReporteActual === 'estudiantes') {
+                columnas = ['ID', 'Nombre Completo', 'Cédula', 'Carrera', 'Semestre', 'Tipo Acción', 'Descripción', 'Fecha/Hora'];
+                filas = datosFiltrados.map(item => [
+                    item.id || '',
+                    item.nombre_completo || '',
+                    item.cedula || '',
+                    item.carrera || '',
+                    item.semestre || '',
+                    item.tipo_accion || '',
+                    item.descripcion || '',
+                    item.fecha_hora ? new Date(item.fecha_hora).toLocaleString('es-ES') : ''
+                ]);
+            } else {
+                columnas = ['ID', 'Usuario', 'Rol', 'Tipo Acción', 'Descripción', 'Fecha/Hora'];
+                filas = datosFiltrados.map(item => [
+                    item.id || '',
+                    item.nombre_usuario || '',
+                    item.rol || '',
+                    item.tipo_accion || '',
+                    item.descripcion || '',
+                    item.fecha_hora ? new Date(item.fecha_hora).toLocaleString('es-ES') : ''
+                ]);
+            }
+
+            // Generar tabla con autoTable
+            doc.autoTable({
+                head: [columnas],
+                body: filas,
+                startY: 45,
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 2
+                },
+                headStyles: {
+                    fillColor: [59, 130, 246], // Color azul
+                    textColor: 255
+                },
+                alternateRowStyles: {
+                    fillColor: [248, 250, 252] // Color gris claro alternado
+                },
+                margin: { top: 45, left: 14, right: 14 }
+            });
+
+            // Descargar el archivo
+            const nombreArchivo = `reporte_${tipoReporteActual}_${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(nombreArchivo);
+        }
+
+        function descargarExcel() {
+            // Preparar datos para Excel
+            let datosExcel;
+            
+            if (tipoReporteActual === 'estudiantes') {
+                datosExcel = datosFiltrados.map(item => ({
+                    'ID': item.id || '',
+                    'Nombre Completo': item.nombre_completo || '',
+                    'Cédula': item.cedula || '',
+                    'Carrera': item.carrera || '',
+                    'Semestre': item.semestre || '',
+                    'Tipo de Acción': item.tipo_accion || '',
+                    'Descripción': item.descripcion || '',
+                    'Fecha y Hora': item.fecha_hora ? new Date(item.fecha_hora).toLocaleString('es-ES') : ''
+                }));
+            } else {
+                datosExcel = datosFiltrados.map(item => ({
+                    'ID': item.id || '',
+                    'Usuario': item.nombre_usuario || '',
+                    'Rol': item.rol || '',
+                    'Tipo de Acción': item.tipo_accion || '',
+                    'Descripción': item.descripcion || '',
+                    'Fecha y Hora': item.fecha_hora ? new Date(item.fecha_hora).toLocaleString('es-ES') : ''
+                }));
+            }
+
+            // Crear workbook y worksheet
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.json_to_sheet(datosExcel);
+
+            // Configurar anchos de columna
+            const columnWidths = [];
+            if (tipoReporteActual === 'estudiantes') {
+                columnWidths.push(
+                    { wch: 8 },  // ID
+                    { wch: 25 }, // Nombre Completo
+                    { wch: 15 }, // Cédula
+                    { wch: 20 }, // Carrera
+                    { wch: 10 }, // Semestre
+                    { wch: 15 }, // Tipo de Acción
+                    { wch: 30 }, // Descripción
+                    { wch: 20 }  // Fecha y Hora
+                );
+            } else {
+                columnWidths.push(
+                    { wch: 8 },  // ID
+                    { wch: 20 }, // Usuario
+                    { wch: 12 }, // Rol
+                    { wch: 15 }, // Tipo de Acción
+                    { wch: 30 }, // Descripción
+                    { wch: 20 }  // Fecha y Hora
+                );
+            }
+            worksheet['!cols'] = columnWidths;
+
+            // Agregar información adicional en las primeras filas
+            const titulo = tipoReporteActual === 'estudiantes' 
+                ? 'Historial de Accesos de Estudiantes' 
+                : 'Historial de Usuarios';
+            
+            XLSX.utils.sheet_add_aoa(worksheet, [
+                [titulo],
+                [`Generado el: ${new Date().toLocaleString('es-ES')}`],
+                [`Total de registros: ${datosFiltrados.length}`],
+                [] // Fila vacía
+            ], { origin: 'A1' });
+
+            // Agregar el worksheet al workbook
+            XLSX.utils.book_append_sheet(workbook, worksheet, tipoReporteActual === 'estudiantes' ? 'Estudiantes' : 'Usuarios');
+
+            // Descargar el archivo
+            const nombreArchivo = `reporte_${tipoReporteActual}_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(workbook, nombreArchivo);
         }
     </script>
 </body>

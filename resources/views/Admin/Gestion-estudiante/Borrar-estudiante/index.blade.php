@@ -8,8 +8,8 @@
   <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet"> <!-- Local FontAwesome -->
 
 </head>
-<body class="min-h-screen bg-blue-200 flex justify-center items-center">
-  <div class="bg-white shadow-md rounded-md p-6 w-full max-w-6xl">
+<body class="min-h-screen bg-blue-200 flex justify-center items-center animate-fade-in">
+  <div class="bg-white shadow-md rounded-md p-6 w-full max-w-6xl animate-fade-in">
     <!-- Header -->
     <div class="relative mb-4">
       <a href="{{ route('Gestion.index') }}"
@@ -56,7 +56,7 @@
       </div>
       
       <!-- Tabla de estudiantes habilitados -->
-      <div id="tabla-habilitados" class="tab-content bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+      <div id="tabla-habilitados" class="tab-content bg-white p-4 rounded-lg shadow-md overflow-x-auto animate-fade-in">
         <h3 class="text-lg text-center font-semibold text-blue-700 mb-3">
           <i class="fas fa-user-check mr-2"></i>Estudiantes Habilitados
         </h3>
@@ -97,7 +97,7 @@
       </div>
 
       <!-- Tabla de estudiantes deshabilitados -->
-      <div id="tabla-deshabilitados" class="tab-content bg-white p-4 rounded-lg shadow-md overflow-x-auto hidden">
+      <div id="tabla-deshabilitados" class="tab-content bg-white p-4 rounded-lg shadow-md overflow-x-auto hidden animate-fade-in">
         <h3 class="text-lg font-semibold text-center text-red-500 mb-3">
           <i class="fas fa-user-times mr-2"></i>Estudiantes Deshabilitados
         </h3>
@@ -141,7 +141,7 @@
 
   <!-- Modal Detalles -->
   <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-md shadow-md p-6 w-full max-w-lg">
+    <div class="bg-white rounded-md shadow-md p-6 w-full max-w-lg animate-fade-in">
       <h2 class="text-xl font-bold text-blue-700 mb-4 flex justify-center items-center">
         <i class="fas fa-user-graduate mr-2"></i>
         Detalles del Estudiante

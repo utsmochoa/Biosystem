@@ -19,7 +19,7 @@
   }
 </style>
 <body class="min-h-screen bg-blue-200 flex justify-center items-center">
-  <div class="bg-white shadow-md rounded-md p-6 w-full max-w-4xl">
+  <div class="bg-white shadow-md rounded-md p-6 w-full max-w-4xl animate-fade-in">
     <div class="relative mb-2">
       <a href="{{ route('Gestion.seleccion') }}"
          class="absolute left-0 top-1/2 transform -translate-y-1/2 text-blue-700 hover:text-blue-900 font-medium inline-flex items-center transition">
@@ -96,8 +96,8 @@
   </div>
 
   <!-- Modal Detalles -->
-  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-gray-100 rounded-lg shadow-xl p-6 w-full max-w-lg mx-4 transform transition-all">
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden  z-50">
+    <div class="bg-gray-100 rounded-lg shadow-xl p-6 w-full max-w-lg mx-4 transform transition-all animate-fade-in">
       <h2 class="text-xl font-bold text-blue-700 mb-6 flex justify-center items-center">
         <i class="fas fa-user-graduate mr-2"></i>
         Detalles del Estudiante

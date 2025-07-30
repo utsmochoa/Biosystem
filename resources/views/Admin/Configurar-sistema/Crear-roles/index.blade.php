@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto">
+    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto animate-fade-in">
 
         <!-- Botón de volver -->
         <div class="relative mb-2">

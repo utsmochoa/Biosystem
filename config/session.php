@@ -32,7 +32,7 @@ return [
     |
     */
 
-    'lifetime' => 5, // minutos de inactividad antes de cerrar sesión
+    'lifetime' => 10, // minutos de inactividad antes de cerrar sesión
     'expire_on_close' => false,
 
     /*

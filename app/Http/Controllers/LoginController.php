@@ -54,9 +54,7 @@ class LoginController extends Controller
             }
         }
 
-        return back()->withErrors([
-            'name' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('name');
+        return redirect()->route('credenciales')->with('error', 'Credenciales incorrectas. Por favor, inténtelo de nuevo.');
     }
 
     public function logout(Request $request)

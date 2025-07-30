@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-blue-200 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto">
+    <div class="bg-white shadow-md rounded-md p-10 w-full max-w-2xl mx-auto animate-fade-in">
 
         <div class="relative mb-2">
             <a href="{{ route('Admin.index') }}"
@@ -42,7 +42,7 @@
 
             <a href="{{ route('reportes.index') }}"
                class="w-64 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold rounded-full shadow-md transition duration-300 transform hover:scale-105">
-                <i class="fas fa-file-alt mr-2"></i> Registro de auditoría
+                <i class="fas fa-file-alt mr-2"></i> Reportes del sistema
             </a>
         </div>
     </div>

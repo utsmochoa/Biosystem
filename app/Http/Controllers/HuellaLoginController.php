@@ -81,7 +81,8 @@ class HuellaLoginController extends Controller
             return response()->json(['success' => false, 'error' => 'Fallo en el proceso'], 500);
         } catch (\Exception $e) {
             Log::error('Excepción general: ' . $e->getMessage());
-            return response()->json(['success' => false, 'error' => 'Error interno del sistema'], 500);
+            return redirect()->route('login')
+                ->with('logout_reason', 'Error: Se cerró automaticamente la verificacion por inactividad');
         }
     }
 

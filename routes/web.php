@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         
         // NUEVAS RUTAS PARA VERIFICACIÓN DEDICADA POR CÉDULA
         Route::get('/ingreso/verificacion-cedula', [IngresoController::class, 'verificacionCedula'])->name('Ingreso.verificacion.cedula');
-Route::post('/ingreso/verificacion-cedula', [IngresoController::class, 'buscarPorCedulaVerificacion'])->name('buscar.cedula.verificacion');
+        Route::post('/ingreso/verificacion-cedula', [IngresoController::class, 'buscarPorCedulaVerificacion'])->name('buscar.cedula.verificacion');
         
         // RUTA PARA LA VISTA DE INFORMACIÓN DESDE CÉDULA (si aún la necesitas)
         Route::get('/ingreso/informacion-cedula/{estudiante_id}', [IngresoController::class, 'mostrarInformacionCedula'])->name('Ingreso.Info.cedula');

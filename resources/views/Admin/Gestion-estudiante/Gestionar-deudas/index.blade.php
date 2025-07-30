@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>BioSystem | Gestión de Deudas 💰</title>
+    <title>BioSystem | Gestión de Deudas </title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
 </head>
 
 <body class="bg-blue-200 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 animate-fade-in">
         
         <!-- Header con efecto especial -->
         <div class="bg-white shadow-xl rounded-lg p-6 mb-8 relative overflow-hidden">
@@ -21,7 +21,6 @@
                     <h1 class="text-4xl font-bold text-gray-800 flex items-center">
                         <i class="fas fa-money-bill-wave text-green-500 mr-3"></i>
                         Gestión de Deudas
-                        <span class="text-2xl ml-2">🤫</span>
                     </h1>
                     <p class="text-gray-600 mt-2">Panel secreto para administrar las deudas de estudiantes</p>
                 </div>
@@ -74,7 +73,7 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <div class="flex items-center">
                     <div class="bg-green-100 p-3 rounded-full">
-                        <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                        <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
                     </div>
                     <div class="ml-4">
                         <p class="text-gray-600">Deuda Total</p>
@@ -138,8 +137,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                         {{ $estudiante->deuda > 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
-                                        <i class="fas fa-dollar-sign mr-1"></i>
-                                        {{ number_format($estudiante->deuda, 2) }}
+                                        Bs. {{ number_format($estudiante->deuda, 2) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -189,7 +187,7 @@
                 
                 <div class="mb-6">
                     <label for="deuda" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nueva Deuda ($):
+                        Nueva Deuda (Bs):
                     </label>
                     <input type="number" 
                            name="deuda" 
@@ -221,8 +219,6 @@
         <input type="hidden" name="inactive" id="inactive" value="0">
     </form>
     
-    
-
     <div id="inactivity-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-center">
             <h2 class="text-xl font-bold text-gray-800 mb-2">⚠ Inactividad detectada</h2>
@@ -232,12 +228,9 @@
             </button>
         </div>
     </div>
-    
 
-    <!-- Script para hacer el backdoor más divertido -->
     <script>
-
-    let timeoutDuration = 2 * 60 * 1000; // 2 min
+        let timeoutDuration = 2 * 60 * 1000; // 2 min
         let warningDuration = 1 * 60 * 1000; // 1 min
     
         let warningTimer, logoutTimer;
@@ -249,10 +242,8 @@
     
             logoutTimer = setTimeout(() => {
                 document.getElementById('inactive').value = '1';
-                document.getElementById('logout-form').submit(); // se hace POST correctamente
+                document.getElementById('logout-form').submit();
             }, timeoutDuration);
-
-
         }
     
         function resetTimers() {
@@ -274,7 +265,7 @@
         ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
             window.addEventListener(evt, () => {
                 resetTimers();
-                closeModal(); // Solo se cierra si el usuario se mueve
+                closeModal();
             });
         });
         

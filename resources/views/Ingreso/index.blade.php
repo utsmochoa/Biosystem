@@ -36,7 +36,7 @@
 </head>
 
 <body class="bg-blue-200 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-10 rounded-lg shadow-lg text-center w-full max-w-md relative">
+    <div class="bg-white p-10 rounded-lg shadow-lg text-center w-full max-w-md relative animate-fade-in">
         <!-- Logo -->
         <div class="mb-6">
             <img src="/images/logo.png" alt="Logo IUTAJS" class="w-24 mx-auto">
