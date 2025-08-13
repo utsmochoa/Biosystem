@@ -62,7 +62,7 @@ erDiagram
 - 4GB RAM mínimo
 - SSD 128GB+
 
-```
+
 
 ## 📚 Módulos Principales
 
