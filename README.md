@@ -62,30 +62,6 @@ erDiagram
 - 4GB RAM mínimo
 - SSD 128GB+
 
-### 🔄 Proceso de Instalación
-```bash
-# 1. Clonar repositorio
-git clone https://github.com/utsmochoa/Biosystem.git
-cd Biosystem
-
-# 2. Instalar dependencias
-composer install
-npm install
-pip install -r requirements.txt
-
-# 3. Configurar entorno
-cp .env.example .env
-php artisan key:generate
-
-# 4. Configurar rutas biométricas (en .env)
-BIOMETRIC_DEVICE_PATH="C:\\Futronic\\Drivers"
-BIOMETRIC_PYTHON_PATH="resources/python/"
-
-# 5. Ejecutar migraciones
-php artisan migrate --seed
-
-# 6. Iniciar sistema
-php artisan serve
 ```
 
 ## 📚 Módulos Principales
