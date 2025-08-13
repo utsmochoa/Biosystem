@@ -1,4 +1,4 @@
-# 🚀 BioSystem - Sistema Biométrico de Control de Acceso para el IUTAJS
+# 🚀 BioSystem - Sistema Biométrico de Control de Acceso para el IUTAJS (Proyecto de tesis)
 
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
